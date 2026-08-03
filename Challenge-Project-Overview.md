@@ -41,7 +41,7 @@ The project leverages relevant and compelling datasets for public health applica
 # CufflessAI: An Educational Blood Pressure Estimation
 
 **Company / Org:** Microsoft  
-**Challenge Advisor:** Wee Hyong Tok, weehyong@gmail.com  
+**Challenge Advisor:** Fatima Rafiqui, [Email address]     
 **Program:** Break Through Tech AI Studio - Fall 2026
 
 ---
