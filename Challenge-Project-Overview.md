@@ -103,15 +103,16 @@ Use these milestones to guide your work. Your team will create a **GitHub Projec
 
 ## 📊 Dataset
 
-**Name and Source:** Public physiological signal data 
+**Name and Source:** Cuff-Less Blood Pressure Estimation   
 **Format:** CSV, TSV, Matlab v7.3 mat file  
 **Size:** 1gb to 5gb  
 **Location:** https://archive.ics.uci.edu/dataset/340/cuff%2Bless%2Bblood%2Bpressure%2Bestimation
 
 ### Key Details
-- Public physiological signal data (PPG, ECG, and arterial blood pressure waveforms) provided in CSV/TSV and Matlab v7.3 mat file formats.
-- Expect preprocessing due to variations in the data formats.
+- [Brief description of what's in the data]
+- [Any known limitations or preprocessing needed]
 - [Link to data dictionary or documentation, if available]
+
 
 ---
 
