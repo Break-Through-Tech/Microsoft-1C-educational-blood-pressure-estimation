@@ -59,17 +59,43 @@ Microsoft is a global technology company that specializes in software, services,
 In this project, you will use public physiological signal data, including photoplethysmography (PPG), electrocardiogram (ECG), and arterial blood pressure waveforms, and supervised machine learning regression techniques to build an educational model that estimates systolic and diastolic blood pressure from pulse-signal features. This will help our organization address the need for responsible, hands-on AI education by giving students experience with real-world sensor data, signal preprocessing, model evaluation, and the limitations of health-related machine learning prototypes.
 
 ### Success Criteria
-Production of a complete, responsible, end-to-end ML prototype; evaluation using Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE); comparison of at least two regression models against a naive baseline.
+
+Success should be measured by whether the team produces a complete, responsible, end-to-end ML prototype rather than by whether the model achieves clinical accuracy.
+
+A successful outcome by December would include:   
+- A reproducible Python notebook that loads the dataset, preprocesses signals, extracts features, trains models, and evaluates predictions.   
+- At least two regression models compared against a naïve baseline.   
+- Evaluation metrics reported for both SBP and DBP:   
+- Evaluation using Mean Absolute Error, or MAE Root Mean Squared Error, or RMSE   
+- A clear model comparison table.   
+- Basic feature importance or interpretability analysis.   
+
+### Stretch Goals
+
+_Advanced modeling_
+Students who progress quickly can try a simple 1D convolutional neural network that learns directly from raw PPG waveforms, instead of relying only on hand-crafted features.
+
+_Blood pressure category classification_
+In addition to predicting SBP and DBP, students can classify readings into broad categories such as low, normal, elevated, or high blood pressure. This would add a classification component.
+
+_Personal calibration simulation_
+Students can simulate a simple calibration step where a known cuff reading is used to adjust model predictions for an individual user.
+Improved app experience
+
+Students can expand the Streamlit app with waveform plots, model confidence/error bands, feature explanations, and side-by-side model comparisons.
+
+_Camera/video-inspired prototype_
+As an advanced stretch, students can explore how phone-camera or webcam-based pulse extraction works. This should remain optional because it introduces computer vision and signal quality challenges beyond the core ML project.
 
 ### Project Milestones
 
 Use these milestones to guide your work. Your team will create a **GitHub Projects board** to track tasks within each milestone.
 
 | Month | Milestone | Key Activities |
-|-------|-----------|----------------|
-| **September** | Data Understanding | Explore dataset, handle missing values, document findings |
-| **October** | Model Development | Train baseline model, experiment with approaches, iterate |
-| **November** | Evaluation & Presentation | Finalize model, prepare presentation, document results |
+|---|---|---|
+| September | [Title] | Data understanding, preprocessing, and baseline |
+| October | [Title] | Model training and evaluation |
+| November | [Title] | Final prototype, report, and demo app |
 
 > **Note for the team:** Please create a GitHub Projects board in this repository to break these milestones into weekly tasks. Go to the **Projects** tab → **New project** → Choose **Board** → Add columns for each month.
 
@@ -77,10 +103,10 @@ Use these milestones to guide your work. Your team will create a **GitHub Projec
 
 ## 📊 Dataset
 
-**Name and Source:** Public physiological signal data from [Data Source Link]  
+**Name and Source:** Public physiological signal data 
 **Format:** CSV, TSV, Matlab v7.3 mat file  
 **Size:** 1gb to 5gb  
-**Location:** [Link to dataset or instructions for accessing it]
+**Location:** https://archive.ics.uci.edu/dataset/340/cuff%2Bless%2Bblood%2Bpressure%2Bestimation
 
 ### Key Details
 - Public physiological signal data (PPG, ECG, and arterial blood pressure waveforms) provided in CSV/TSV and Matlab v7.3 mat file formats.
@@ -91,17 +117,13 @@ Use these milestones to guide your work. Your team will create a **GitHub Projec
 
 ## 🛠️ Suggested Approach
 
-**ML Problem Type:** Regression
+**ML Problem Type:** Classification,Regression,Time Series Analysis,Large Language Models (LLMs)/ Generative AI
 
 **Recommended Libraries:**
-- Supervised machine learning regression
-- Python
-- 1D convolutional neural networks
-- Streamlit
+- [e.g., pandas, scikit-learn, TensorFlow, Hugging Face]
 
 **Evaluation Metrics:**
-- Mean Absolute Error (MAE)
-- Root Mean Squared Error (RMSE)
+- [e.g., Accuracy, Precision/Recall, RMSE, BLEU score]
 
 ---
 
@@ -110,16 +132,16 @@ Use these milestones to guide your work. Your team will create a **GitHub Projec
 The following resources will help your team understand the problem space and potential technical approaches for this project:
 
 **Background Reading:**
-- [Link to an article or blog post about the problem domain]
-- [Link to an industry report or case study]
+- [e.g., Link to an article or blog post about the problem domain]
+- [e.g., Link to an industry report or case study]
 
 **Technical Tutorials:**
-- [Link to a free tutorial on the ML technique(s) involved]
-- [Link to documentation for a key library or tool]
+- [e.g., Link to a free tutorial on the ML technique(s) involved]
+- [e.g., Link to documentation for a key library or tool]
 
 **Code Examples:**
-- [Link to a relevant GitHub repo]
-- [Link to a sample implementation or starter code]
+- [e.g., Link to a relevant GitHub repo]
+- [e.g., Link to a sample implementation or starter code]
 
 **Other:**
 - [Links to any additional resources — e.g., papers, videos, podcasts, etc.]
@@ -130,14 +152,19 @@ The following resources will help your team understand the problem space and pot
 
 ## 🤝 How We'll Work Together
 
-**Check-ins:** During our biweekly 60-min AI Studio Lab Section meeting block (2nd and 4th week of every month)  
-**Communication:** Slack (Break Through Tech workspace)  
-**Response time:** Within 48 hours on weekdays  
+**Official check-ins:** During our biweekly 45-minute AI Studio Lab Section meeting block (2nd and 4th week of every month)
 
-**Recommended Tools:**
-- **Coding:** Google Colab, VS Code
-- **Collaboration:** GitHub, Notion
-- **Virtual Meetings:** Zoom, Google Meet
+ **Other ways to reach out to me with questions:** 
+* [e.g., Your team's channel within Break Through Tech’s Discord space]
+* [e.g., Email; please copy your teammates and AI Studio Coach]
+* [e.g., Request a team check-in on Zoom]
+* [Note: I will aim to respond within 48 hours. Please reach out to your AI Studio Coach with urgent questions.]
+
+> 💡 **Challenge Advisor: Please update the above based on your availability and preference. If you are not able to answer questions or meet with fellows outside of the biweekly Lab Section check-ins, simply write in "N/A (only available during the official check-in times)"**
+
+**Recommended free coding / collaboration tools**
+* […]
+* […]
 
 ---
 
@@ -147,12 +174,10 @@ The following resources will help your team understand the problem space and pot
 2. **Begin reviewing the dataset** using the link above
 3. **Read the GitHub Projects documentation** [here](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects)
 
-I'm excited to work with you!
+I’m excited to work with you!
 
 ---
 
 ## ❓ Questions?
 
-Please bring any questions to our first meeting, scheduled for the week of August 24th (Break Through Tech's Bridge to Studio - Session B).
-
----
+Please bring any questions to our first meeting during the week of August 24th (Break Through Tech’s Bridge to Studio - Session C). 
