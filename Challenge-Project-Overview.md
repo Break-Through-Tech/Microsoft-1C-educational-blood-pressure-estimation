@@ -41,7 +41,7 @@ The project leverages relevant and compelling datasets for public health applica
 # CufflessAI: An Educational Blood Pressure Estimation
 
 **Company / Org:** Microsoft  
-**Challenge Advisor:** Fatima Rafiqui, [Email address]   
+**Challenge Advisor:** Fatima Rafiqui, fatima.rafiqui@gmail.com  
 **AI Studio Coach:** Anshul Rehpade, anshul.rehpade@breakthroughtech.org   
 **Program:** Break Through Tech AI Studio - Fall 2026
 
