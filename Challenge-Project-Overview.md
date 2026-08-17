@@ -1,62 +1,27 @@
----
-
-> ## Challenge Advisor: Update & Finalize Your Project Overview
->
-> > 💡 **These grey text instructions are just for you, the team's Challenge Advisor; please delete them once you have completed the steps below.**
->
-> We've pre-populated this Challenge Project Overview page — which is what will be shared with your Break Through Tech student team in August — using the details from your submission form. You should have received an email inviting you to join this repo as a Collaborator, enabling you to add files and make edits.
-> 
-> In order for your project to be finalized and assigned to a team, please:
-> 1. **Review all sections below** and update or expand any content as needed, making sure to address the SME Feedback in the section immediately below. Look for square brackets to find the places below that require additional inputs from you (e.g., "About [Company / Org Name]").
-> 2. **Add your dataset** to the [data folder](data) in this repo.
-> 3. **Close the Issue assigned to you in this repo** to let us know that you have made your edits and the overview page is ready for final review. You can do this by going to the _Issues_ tab in the top left section of the menu above, add a comment that says "CA review complete", and click the button to Close the Issue. 
->
-> If you're unfamiliar with how to edit a page like this in GitHub, check out [this tutorial](https://ubc-lib-geo.github.io/gis-workshop-waml-template/content/handson/edit-readme.html) for a quick overview (start with step 2 and only edit this page), and [this guide](https://ubc-lib-geo.github.io/gis-workshop-waml-template/content/markdown.html) on how to use Markdown to compose text.
->
->
-> ❌ Remember that this is a public repo. Do NOT include: Proprietary data, PII, API keys, credentials, or anything confidential.
-
----
-
-### 🔍 SME Feedback from the Break Through Tech Evaluation Team
-
-*Challenge Advisor: Please address the following feedback by editing this page. Your AI Studio Coach can help make project adjustments as needed, too. In addition to the grey section above, this section should be removed before sharing the repo with your student team.*
-
-| Check | Status | Notes |
-|-------|--------|-------|
-| Python Compatibility | 🟢 | The tech stack is centered on Python, aligning with the fellows' experience and academic requirements. |
-| Data Readiness | 🟡 | While the data is publicly available, preprocessing may be needed because it originates in different formats (CSV/TSV and MATLAB), which could require additional effort. |
-| Resource Check | 🟢 | No specialized hardware required; free-tier tools (Google Colab) can meet the project's needs at no additional cost. |
-
-**Student Fit Score:** 7/10  
-**Technical Depth Score:** 8/10  
-**Overall Recommendation:** REVISE
-
-**Advisor Feedback Draft:**
-The project leverages relevant and compelling datasets for public health applications, providing a rich educational opportunity. However, we should consider simplifying aspects of the machine learning techniques to better align with the fellows' existing expertise in basic modeling or provide supplementary resources. Ensuring students are adequately prepared for the unique characteristics of working with medical data is crucial. I recommend working closely with mentors to address these challenges.
-
-
----
-
 # CufflessAI: An Educational Blood Pressure Estimation
 
 **Company / Org:** Microsoft  
-**Challenge Advisor:** Fatima Rafiqui, fatima.rafiqui@gmail.com  
+**Challenge Advisor:** Fatima Rafiqui, fatima.rafiqui@gmail.com   
 **AI Studio Coach:** Anshul Rehpade, anshul.rehpade@breakthroughtech.org   
 **Program:** Break Through Tech AI Studio - Fall 2026
 
 ---
 
 ## 🏢 About Microsoft
-
-Microsoft is a global technology company that specializes in software, services, devices, and solutions. Our mission is to empower every person and every organization on the planet to achieve more, focusing on innovation and technology impact across various industries.
+Microsoft creates platforms and tools powered by AI to deliver innovative solutions that meet the evolving needs of our customers. The technology company is committed to making AI available broadly and doing so responsibly, with a mission to empower every person and every organization on the planet to achieve more.
 
 ---
 
 ## 🎯 The Challenge
 
 ### Project Summary
-In this project, you will use public physiological signal data, including photoplethysmography (PPG), electrocardiogram (ECG), and arterial blood pressure waveforms, and supervised machine learning regression techniques to build an educational model that estimates systolic and diastolic blood pressure from pulse-signal features. This will help our organization address the need for responsible, hands-on AI education by giving students experience with real-world sensor data, signal preprocessing, model evaluation, and the limitations of health-related machine learning prototypes.
+This project enables a responsible AI and hands-on AI education by giving students experience with real-world sensor data, signal preprocessing, model evaluation, and the limitations of health-related machine learning prototypes.
+
+A photoplethysmogram (PPG) enables one to track changes in blood volume under your skin. When the heart beats, there are changes to the amount of blood at your fingertip. This change in the amount of blood can affect the amount of light that passes through your finger. It’s similar to the pulse oximeters that you often experience in clinic, where the doctor/nurse clips a device on your finger.
+
+In this project, you will use public physiological signal data, including photoplethysmography (PPG), electrocardiogram (ECG), and arterial blood pressure waveforms. There are different machine learning approaches that can be used to predict blood pressure from this signal. For example, you can use traditional feature engineering with classification/regression techniques, use a neural network to learn directly from the raw signal, or leverage Large Language models (LLMs) for the prediction.
+
+The goal is to build an educational AI model that estimates systolic and diastolic blood pressure from pulse-signal features. 
 
 ### Success Criteria
 
@@ -71,21 +36,23 @@ A successful outcome by December would include:
 - Basic feature importance or interpretability analysis.   
 
 ### Stretch Goals
+A demo app will be an excellent approach to demonstrate the AI model that you have built for blood pressure prediction.
+Students can expand the scope of the project by building a [Replit app](https://replit.com/) with waveform plots, model confidence/error bands, feature explanations, and side-by-side model comparisons. 
 
-_Advanced modeling_
-Students who progress quickly can try a simple 1D convolutional neural network that learns directly from raw PPG waveforms, instead of relying only on hand-crafted features.
+You can also consider deploying the Replit app using [Rayfin](https://www.microsoft.com/en-us/microsoft-fabric/features/rayfin) on [Microsoft Fabric](https://www.microsoft.com/en-us/microsoft-fabric/features/rayfin)
+
+The app can consider using signals from a phone-camera or webcam-based to extract the pulse of a user, and then feed this as inputs to the demo app for blood pressure prediction.
+
+Examples 
+* [smartphone based heart rate monitoring](https://medium.com/@bgallois/smartphone-based-heart-rate-monitoring-preprocessing-and-analysis-of-ppg-signals-de443473f529)
+
 
 _Blood pressure category classification_
 In addition to predicting SBP and DBP, students can classify readings into broad categories such as low, normal, elevated, or high blood pressure. This would add a classification component.
 
-_Personal calibration simulation_
-Students can simulate a simple calibration step where a known cuff reading is used to adjust model predictions for an individual user.
-Improved app experience
+_Advanced modeling_
+Students who progress quickly can try a simple 1D convolutional neural network that learns directly from raw PPG waveforms, instead of relying only on hand-crafted features.
 
-Students can expand the Streamlit app with waveform plots, model confidence/error bands, feature explanations, and side-by-side model comparisons.
-
-_Camera/video-inspired prototype_
-As an advanced stretch, students can explore how phone-camera or webcam-based pulse extraction works. This should remain optional because it introduces computer vision and signal quality challenges beyond the core ML project.
 
 ### Project Milestones
 
@@ -93,9 +60,9 @@ Use these milestones to guide your work. Your team will create a **GitHub Projec
 
 | Month | Milestone | Key Activities |
 |---|---|---|
-| September | [Title] | Data understanding, preprocessing, and baseline |
-| October | [Title] | Model training and evaluation |
-| November | [Title] | Final prototype, report, and demo app |
+| September | Data Understanding | Explore dataset, handle missing values, document findings |
+| October | Model Development | Model training and evaluation |
+| November | Evaluation & Presentation | Finalize model, prepare presentation, document results|
 
 > **Note for the team:** Please create a GitHub Projects board in this repository to break these milestones into weekly tasks. Go to the **Projects** tab → **New project** → Choose **Board** → Add columns for each month.
 
@@ -108,11 +75,40 @@ Use these milestones to guide your work. Your team will create a **GitHub Projec
 **Size:** 1gb to 5gb  
 **Location:** https://archive.ics.uci.edu/dataset/340/cuff%2Bless%2Bblood%2Bpressure%2Bestimation
 
-### Key Details
-- [Brief description of what's in the data]
-- [Any known limitations or preprocessing needed]
-- [Link to data dictionary or documentation, if available]
 
+### Key Details
+The UCI Cuff-less Blood Pressure dataset contains the data that we will use to train the AI model.
+Each patient has a PPG signal and an ABP signal. We do not need to use the ECG signal for now.
+
+When you download the files from the location above, the dataset is in Matlab's v7.3 mat file.
+The dataset has a cell array of matrices, each cell is one record part.
+In each matrix each row corresponds to one signal channel: 
+- PPG signal, FS=125Hz;  photoplethysmograph from fingertip
+- ABP signal, FS=125Hz; invasive arterial blood pressure (mmHg)
+- ECG signal, FS=125Hz; electrocardiogram from channel II
+
+To load the Matlab file, you can consider using scipy.io
+
+Example on how to Load the. mat data file (update path to your local file location)
+
+`mat_data = scipy.io.loadmat('part_1.mat')`
+
+Few things to consider as you preprocess the data
+- When you load the MATLAB files, you might want to consider processing them into 5-second windows. 
+When you process the data into 5-second window, each window should contain 625 PPG samples as input and a pair of blood pressure values as labels.
+
+- For each window, you can extract systolic and diastolic pressure from the ABP signal by finding the peaks (systolic) and valleys (diastolic). If a window contains noisy signals or physiologically impossible values, you can consider discarding the noisy data.
+
+- After pre-processing all the data files, you will have a dataset with 10,000+ paired dataset. Each example is a 625-sample PPG window, and the systolic and diastolic labels.
+
+## 📊 Feature Engineering
+Feature engineering is an important step, as you work towards training an AI model. Feature engineering is the process of transforming raw data into relevant information (or features) that can be used as inputs towards training an AI model.
+
+As you prepare for training, you might have to further pre-process the data to extract the relevant features needed to train the model.
+NeuroKit2 is a good library that you can use to further clean the signal, find heartbeat peaks, and calculate meaningful measurements.
+You can use NeuroKit to extract relevant morphological features from PPG signals that correlate with blood pressure. Some of these features include heart rate variability, pulse morphology, and more.
+
+As you work through feature engineering to identify the relevant features, you should have about 10+ features and the label that corresponds to whether it is high blood or low blood pressure. 
 
 ---
 
@@ -121,10 +117,15 @@ Use these milestones to guide your work. Your team will create a **GitHub Projec
 **ML Problem Type:** Classification,Regression,Time Series Analysis,Large Language Models (LLMs)/ Generative AI
 
 **Recommended Libraries:**
-- [e.g., pandas, scikit-learn, TensorFlow, Hugging Face]
+- pandas, scikit-learn, scipy, Hugging Face
+- NeuroKit [https://neuropsychology.github.io/NeuroKit/]
 
 **Evaluation Metrics:**
-- [e.g., Accuracy, Precision/Recall, RMSE, BLEU score]
+- Mean Absolute Error (MAE)
+- Root Mean Squared Error (RMSE)
+- R² score
+
+As you explore different evaluation metrics that you can use to evaluate the AI model, think about whether there are other evaluation metrics that you can use.
 
 ---
 
@@ -133,19 +134,22 @@ Use these milestones to guide your work. Your team will create a **GitHub Projec
 The following resources will help your team understand the problem space and potential technical approaches for this project:
 
 **Background Reading:**
-- [e.g., Link to an article or blog post about the problem domain]
-- [e.g., Link to an industry report or case study]
+- [Nature - A benchmark for machine-learning based non-invasive blood pressure estimation using photoplethysmogram](https://www.nature.com/articles/s41597-023-02020-6)
+- [Estimating Blood Pressure from the Photoplethysmogram Signal and Demographic Features Using Machine Learning Techniques](https://pmc.ncbi.nlm.nih.gov/articles/PMC7309072/)
+- [Exploring supervised machine learning models to estimate blood pressure using non-fiducial features of the photoplethysmogram (PPG) and its derivatives](https://pmc.ncbi.nlm.nih.gov/articles/PMC12511243/)
+- [A continuous cuffless blood pressure measurement from optimal PPG characteristic features using machine learning algorithms](https://pmc.ncbi.nlm.nih.gov/articles/PMC10963242/)
 
 **Technical Tutorials:**
-- [e.g., Link to a free tutorial on the ML technique(s) involved]
-- [e.g., Link to documentation for a key library or tool]
+- [Using SciPy to load MatLab files](https://docs.scipy.org/doc/scipy/reference/generated/scipy.io.loadmat.html)
+- [Neurokit Examples](https://neuropsychology.github.io/NeuroKit/examples/)
+- [pyPPG](https://pypi.org/project/pyPPG/)
 
 **Code Examples:**
-- [e.g., Link to a relevant GitHub repo]
-- [e.g., Link to a sample implementation or starter code]
+- [Kaggle - Blood Pressure Analysis](https://www.kaggle.com/code/stephenmugisha/bloodpressure-analysis)
 
 **Other:**
-- [Links to any additional resources — e.g., papers, videos, podcasts, etc.]
+- [Blood Pressure Estimation from PPG Signals - ICASSP 2020](https://www.youtube.com/watch?v=tZLotOFiyZ4)
+
 
 *Feel free to explore beyond these, and share anything interesting you find with me!*
 
@@ -156,14 +160,16 @@ The following resources will help your team understand the problem space and pot
 **Official check-ins:** During our biweekly 45-minute AI Studio Lab Section meeting block (2nd and 4th week of every month)
 
  **Other ways to reach out to me with questions:** 
-* Email: fatima.rafiqui@gmail.com
-* Note: I will aim to respond within 48 hours. Please reach out to your AI Studio Coach with urgent questions.
-
-> 💡 **Challenge Advisor: Please update the above based on your availability and preference. If you are not able to answer questions or meet with fellows outside of the biweekly Lab Section check-ins, simply write in "N/A (only available during the official check-in times)"**
+* Bi-weekly Lab Section check-ins
+* Email if you have any questions - please copy your teammates and AI Studio Coach
+* Request a team check-in on Zoom
+* I will aim to respond within 48 hours. Please reach out to your AI Studio Coach with urgent questions.
 
 **Recommended free coding / collaboration tools**
-* […]
-* […]
+* [Visual Studio Code](https://code.visualstudio.com/)
+* [Jupyter](https://jupyter.org/try)
+  
+  
 
 ---
 
