@@ -1,2 +1,5 @@
 h5py
 numpy
+matplotlib
+neurokit2
+scipy.signal
