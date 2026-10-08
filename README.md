@@ -79,12 +79,12 @@ We used the **UCI Cuff-Less Blood Pressure Estimation dataset**, stored in four 
 (<img width="528" height="370" alt="image" src="https://github.com/user-attachments/assets/48e5c581-d107-4a6f-a123-ca1d25bad7c6" />
 )
 
-**Distribution of recording lengths**<img width="1416" height="843" alt="Screenshot 2026-09-22 at 10 50 04 PM" src="https://github.com/user-attachments/assets/7d032e17-cf3e-4155-86e8-f32b895b5a1b" />
-
+**Distribution of recording lengths**
 <img width="1161" height="469" alt="image (1)" src="https://github.com/user-attachments/assets/aad7cc96-34f4-4809-b1e3-ff21b229da9f" />
 
 **NeuroKit2 analysis of a PPG signal**
-![Uploading Screenshot 2026-09-22 at 10.50.04 PM.png…]()
+<img width="1416" height="843" alt="Screenshot 2026-09-22 at 10 50 04 PM" src="https://github.com/user-attachments/assets/7d032e17-cf3e-4155-86e8-f32b895b5a1b" />
+
 
 
 ---
