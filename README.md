@@ -75,7 +75,8 @@ We used the **UCI Cuff-Less Blood Pressure Estimation dataset**, stored in four 
 ### Visualizations
 
 **PPG, ABP, and ECG — first 5 seconds**
-![PPG, ABP, and ECG signals](images/signals_first_5s.png)
+![PPG, ABP, and ECG signals](<img width="528" height="370" alt="image" src="https://github.com/user-attachments/assets/48e5c581-d107-4a6f-a123-ca1d25bad7c6" />
+)
 
 **Distribution of recording lengths**
 ![Recording length distribution](images/recording_length_distribution.png)
