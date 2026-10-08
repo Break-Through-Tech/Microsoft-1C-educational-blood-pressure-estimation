@@ -1,121 +1,133 @@
-# AI Studio Challenge Project Title
+# Microsoft 1C – Cuffless Blood Pressure Estimation Model
 
-> 💡 **Note for the team:** This is just a template. Update the above title with your AI Studio Challenge Project name. Remove all guidance notes and example text in this template and populate this README with your own content. You can work on this README throughout AI Studio, and get feedback from your AI Studio Coach and Challenge Advisor before finalizing it.  
-
----
-
-### 👥 **Team Members**
-
-**Example:**
-
-| Name             | GitHub Handle | Contribution                                                             |
-|------------------|---------------|--------------------------------------------------------------------------|
-| Taylor Nguyen    | @taylornguyen | Data exploration, visualization, overall project coordination            |
-| Jordan Ramirez   | @jramirez     | Data collection, exploratory data analysis (EDA), dataset documentation  |
-| Amina Hassan     | @aminahassan  | Data preprocessing, feature engineering, data validation                 |
-| Priya Mehta      | @pmehta       | Model selection, hyperparameter tuning, model training and optimization  |
-| Chris Park       | @chrispark    | Model evaluation, performance analysis, results interpretation           |
+Estimating blood pressure from photoplethysmography (PPG) signals using machine learning — a Break Through Tech AI Studio project hosted by Microsoft.
 
 ---
 
-## 🎯 **Project Highlights**
+## 👥 Team Members
 
-**Example:**
-
-- Developed a machine learning model using `[model type/technique]` to address `[challenge project task]`.
-- Achieved `[key metric or result]`, demonstrating `[value or impact]` for `[host company]`.
-- Generated actionable insights to inform business decisions at `[host company or stakeholders]`.
-- Implemented `[specific methodology]` to address industry constraints or expectations.
-
----
-
-## 👩🏽‍💻 **Setup and Installation**
-
-**Provide step-by-step instructions so someone else can run your code and reproduce your results. Depending on your setup, include:**
-
-* How to clone the repository
-* How to install dependencies
-* How to set up the environment
-* How to access the dataset(s)
-* How to run the notebook or scripts
+| Name           | GitHub Handle                                          | Contribution                                                            |
+|----------------|--------------------------------------------------------|-------------------------------------------------------------------------|
+| Taylor Nguyen  | [@taylornguyen](https://github.com/taylornguyen)       | Data exploration, visualization, overall project coordination           |
+| Claire Zhu     | [@czhu1231](https://github.com/czhu1231)               | Data collection, exploratory data analysis (EDA), dataset documentation |
+| Katherine Shih | [@katherineShih113](https://github.com/katherineShih113) | Data preprocessing, feature engineering, data validation              |
+| Charis Xiong   | [@karrixxa](https://github.com/karrixxa)               | Data preprocessing, exploration, visualization, model evaluation        |
+| Chris Park     | [@chrispark](https://github.com/chrispark)             | Model evaluation, performance analysis, results interpretation          |
 
 ---
 
-## 🏗️ **Project Overview**
+## 🎯 Project Highlights
 
-**Describe:**
-
-- How this project is connected to the Break Through Tech AI Program
-- Your AI Studio host company and the project objective and scope
-- The real-world significance of the problem and the potential impact of your work
+- Explored PPG, arterial blood pressure (ABP), and ECG recordings from the UCI cuffless blood-pressure dataset
+- Divided recordings into five-second windows (625 samples at 125 Hz) for analysis
+- Examined signal quality, pulse characteristics, and blood-pressure labels using NeuroKit2
 
 ---
 
-## 📊 **Data Exploration**
+## 👩🏽‍💻 Setup and Installation
 
-**You might consider describing the following (as applicable):**
+> 🚧 *To be completed.*
 
-* The dataset(s) used: origin, format, size, type of data
-* Data exploration and preprocessing approaches
-* Insights from your Exploratory Data Analysis (EDA)
-* Challenges and assumptions when working with the dataset(s)
+```bash
+# 1. Clone the repository
+git clone https://github.com/<org-or-user>/<repo-name>.git
+cd <repo-name>
 
-**Potential visualizations to include:**
+# 2. (Optional) Create a virtual environment
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
 
-* Plots, charts, heatmaps, feature visualizations, sample dataset images
+# 3. Install dependencies
+pip install -r requirements.txt
+```
 
----
+**Dataset:** Download the [UCI Cuff-Less Blood Pressure Estimation dataset](https://archive.ics.uci.edu/dataset/340/cuff+less+blood+pressure+estimation) and place the `.mat` files in a `data/` folder.
 
-## 🧠 **Model Development**
-
-**You might consider describing the following (as applicable):**
-
-* Model(s) used (e.g., CNN with transfer learning, regression models)
-* Feature selection and Hyperparameter tuning strategies
-* Training setup (e.g., % of data for training/validation, evaluation metric, baseline performance)
-
+**Run:** Open `<notebook-name>.ipynb` in Jupyter or VS Code and run all cells.
 
 ---
 
-## 📈 **Results & Key Findings**
+## 🏗️ Project Overview
 
-**You might consider describing the following (as applicable):**
+This project explores whether blood pressure can be estimated from **photoplethysmography (PPG)**, an optical pulse signal that can be captured by wearable devices. PPG serves as the model input, while the corresponding arterial blood-pressure (ABP) waveform provides systolic and diastolic pressure targets. Before building models, we focused on understanding the recordings and assessing their quality.
 
-* Performance metrics (e.g., Accuracy, F1 score, RMSE)
-* How your model performed
-* Insights from evaluating model fairness
+### Connection to Break Through Tech AI
+This work is part of the **Break Through Tech AI Studio** program, in which student teams tackle real-world machine learning problems with an industry host company.
 
-**Potential visualizations to include:**
+### Host Company: Microsoft
+Microsoft builds AI-powered platforms and tools to meet evolving customer needs and is committed to expanding access to AI responsibly.
 
-* Confusion matrix, precision-recall curve, feature importance plot, prediction distribution, outputs from fairness or explainability tools
-
----
-
-## 🚀 **Next Steps**
-
-**You might consider addressing the following (as applicable):**
-
-* What are some of the limitations of your model?
-* What would you do differently with more time/resources?
-* What additional datasets or techniques would you explore?
+### Why It Matters
+High blood pressure (hypertension) raises the risk of heart attack, heart disease, and stroke [CDC]. It affects roughly 1.3 billion people worldwide, and many are unaware they have it because it often causes few or no symptoms [1]. Standard cuff-based measurement is reliable but uncomfortable and impractical for continuous monitoring. Cuffless approaches based on signals like PPG could make frequent, convenient blood-pressure tracking possible — supporting earlier detection and treatment.
 
 ---
 
-## 📝 **License**
+## 📊 Data Exploration
 
-Specify how your project can be used by others. Choose an appropriate license and link it here (e.g., MIT, Apache 2.0). Make sure your Challenge Advisor approves of the selected license type. 
+We used the **UCI Cuff-Less Blood Pressure Estimation dataset**, stored in four MATLAB (`.mat`) files containing PPG, ABP, and ECG signals. Our exploration so far focuses on **Part 1 (3,000 recordings)**, with plans to expand to the remaining parts.
 
-**Example:**
-This project is licensed under the MIT License.
+- **Sampling rate:** 125 Hz → each 5-second window = 625 samples
+- **Data type:** continuous physiological waveforms
+- **Checks performed:** recording lengths, signal distributions, missing values, zero values, example waveforms
+- **NeuroKit2 analysis:** filtering, pulse detection, signal-quality metrics
+- **Features computed:** pulse rate, amplitude, approximate pulse width, and other waveform statistics, compared against draft blood-pressure targets
+
+### Visualizations
+
+**PPG, ABP, and ECG — first 5 seconds**
+![PPG, ABP, and ECG signals](images/signals_first_5s.png)
+
+**Distribution of recording lengths**
+![Recording length distribution](images/recording_length_distribution.png)
+
+**NeuroKit2 analysis of a PPG signal**
+![NeuroKit2 PPG analysis](images/neurokit2_ppg.png)
 
 ---
 
-## 📄 **References** (Optional but encouraged)
+## 🧠 Model Development
 
-Cite relevant papers, articles, or resources that supported your project.
+> 🚧 *In progress.* This section will cover:
+> - Model(s) used
+> - Feature selection and hyperparameter tuning
+> - Training setup (train/validation/test split, evaluation metrics, baseline)
 
 ---
 
-## 🙏 **Acknowledgements** (Optional but encouraged)
+## 📈 Results & Key Findings
 
-Thank your Challenge Advisor, host company representatives, TA, and others who supported your project.
+> 🚧 *In progress.* This section will cover performance metrics (e.g., MAE/RMSE for systolic and diastolic BP), model comparisons, and fairness/explainability insights.
+
+---
+
+## 🚀 Next Steps
+
+- [ ] Feature engineering
+- [ ] Model development and evaluation
+- [ ] Select final model
+- [ ] Extend analysis to dataset Parts 2–4
+- [ ] Document limitations and future directions
+
+---
+
+## 📝 License
+
+> 🚧 *License pending Challenge Advisor approval.* (e.g., This project is licensed under the [MIT License](LICENSE).)
+
+---
+
+## 📄 References
+
+1. *A benchmark for machine-learning based non-invasive blood pressure estimation using photoplethysmogram.* Scientific Data (Nature).
+2. *Estimating Blood Pressure from the Photoplethysmogram Signal and Demographic Features Using Machine Learning Techniques.*
+3. *Exploring supervised machine learning models to estimate blood pressure using non-fiducial features of the photoplethysmogram (PPG) and its derivatives.*
+4. *A continuous cuffless blood pressure measurement from optimal PPG characteristic features using machine learning algorithms.*
+5. Kaggle – *Blood Pressure Analysis.*
+6. Centers for Disease Control and Prevention (CDC) – High Blood Pressure.
+7. Kachuee, M., et al. *Cuff-Less Blood Pressure Estimation* dataset. UCI Machine Learning Repository.
+
+---
+
+## 🙏 Acknowledgements
+
+Thank you to Fatima Rafiqui, Wee Hyong Tok, Anshul Rehpade, the Microsoft team, Break Through Tech staff, and everyone else who supported our project.
