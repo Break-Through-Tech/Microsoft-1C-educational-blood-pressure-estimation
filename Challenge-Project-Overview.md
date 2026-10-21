@@ -159,7 +159,7 @@ The following resources will help your team understand the problem space and pot
 
 **Official check-ins:** During our biweekly 45-minute AI Studio Lab Section meeting block (2nd and 4th week of every month)
 
- **Other ways to reach out to me with questions:** 
+**Other ways to reach out to me with questions:** 
 * Bi-weekly Lab Section check-ins
 * Email if you have any questions - please copy your teammates and AI Studio Coach
 * Request a team check-in on Zoom

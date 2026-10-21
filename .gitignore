@@ -1,3 +1,6 @@
 
 .venv/
 data/*.mat
+data/cuff_less_bp_estimation/
+data/*.csv
+__pycache__/
