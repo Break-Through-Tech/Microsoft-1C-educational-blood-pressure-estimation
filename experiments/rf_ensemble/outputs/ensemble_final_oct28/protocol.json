@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-28",
+  "features": [
+    "ppg_raw_mean",
+    "ppg_raw_std",
+    "ppg_raw_iqr",
+    "ppg_raw_skew",
+    "ppg_raw_kurtosis",
+    "ppg_raw_p05",
+    "ppg_raw_p95",
+    "ppg_clean_mean",
+    "ppg_clean_std",
+    "ppg_clean_iqr",
+    "ppg_clean_skew",
+    "ppg_clean_kurtosis",
+    "ppg_clean_p05",
+    "ppg_clean_p95",
+    "vpg_mean",
+    "vpg_std",
+    "vpg_iqr",
+    "vpg_skew",
+    "vpg_kurtosis",
+    "vpg_p05",
+    "vpg_p95",
+    "apg_mean",
+    "apg_std",
+    "apg_iqr",
+    "apg_skew",
+    "apg_kurtosis",
+    "apg_p05",
+    "apg_p95",
+    "ppg_hr_bpm",
+    "ppg_interval_std",
+    "ppg_interval_cv",
+    "ppg_amplitude_mean",
+    "ppg_amplitude_std",
+    "ppg_half_height_duration",
+    "ppg_baseline_subtracted_area",
+    "ppg_dominant_frequency_hz",
+    "ppg_high_frequency_fraction"
+  ],
+  "data_sha256": {
+    "expanded_features_and_split.csv": "f61e7b8ccb3da683ff27fb7f62bd2f5963c478544b2dc7620dbab3a174643697",
+    "feature_columns.json": "bf853f69a52dcdc453000183dbe14933c92ae4ae9659e04df66f4662534afed1",
+    "settings.json": "ba04c241b319ef416f0b871cd8f4b849d70ec4d1adc599e90e390f3a77c61f99"
+  },
+  "models": [
+    "Training mean",
+    "Random Forest",
+    "Extra Trees",
+    "Histogram boosting",
+    "Equal-weight ensemble"
+  ],
+  "frozen_forests": "Original October 14 training-only checkpoints; no refit on validation",
+  "boosting_selection": "Four configurations, three grouped training folds; equal-weight target MAE in mmHg",
+  "boosting_grid": {
+    "max_leaf_nodes": [
+      7,
+      15
+    ],
+    "l2_regularization": [
+      1.0,
+      10.0
+    ]
+  },
+  "boosting_fixed": {
+    "max_iter": 150,
+    "learning_rate": 0.05,
+    "min_samples_leaf": 20,
+    "early_stopping": false
+  },
+  "ensemble": "Arithmetic average of RF, Extra Trees and boosting; fixed one-third weights",
+  "test_policy": "Report all frozen models; no test-based model or weight selection",
+  "limits": "Provisional labels/quality gates; recording/overlap-group split; patient independence unknown"
+}

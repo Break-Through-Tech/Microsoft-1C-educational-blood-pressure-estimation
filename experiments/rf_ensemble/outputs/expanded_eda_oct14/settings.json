@@ -1,0 +1,33 @@
+{
+  "seed": 20261014,
+  "recordings_per_part": 200,
+  "max_windows_per_record": 12,
+  "sampling_rate": 125,
+  "window_samples": 625,
+  "quality_method": "NeuroKit templatematch on full-record cleaned PPG",
+  "ppg_quality_min": 0.8,
+  "minimum_ppg_peak_count": 3,
+  "minimum_complete_abp_beats": 3,
+  "maximum_ppg_abp_peak_count_difference": 1,
+  "allowed_ppg_abp_rate_ratio": [
+    0.75,
+    1.25
+  ],
+  "abp_prominence_mmHg": [
+    5,
+    10,
+    15
+  ],
+  "primary_prominence_mmHg": 10,
+  "abp_minimum_peak_spacing_seconds": 0.3,
+  "max_target_spread_mmHg": 5,
+  "flat_extreme_review_samples": 5,
+  "filter_record_margin_seconds": 1,
+  "protocol": "Approximately 70/15/15 overlap groups, balanced on Part/record counts only; grouped correlations on development; test not scored",
+  "quality_scope": "Provisional screening thresholds, not probabilities of correctness or clinical standards",
+  "overlap_limit": "Exact full traces and peak-centered 1s subtraces; near-duplicates and chains with no selected anchor remain unresolved; IDs are recordings, not confirmed people",
+  "python": "3.9.6",
+  "numpy": "2.0.2",
+  "pandas": "2.3.3",
+  "neurokit2": "0.2.10"
+}

@@ -1,0 +1,5 @@
+part,selected_records,selected_windows,eligible_windows,possible_ppg_double_count,possible_abp_double_count
+Part_1,200,1778,1335,0,34
+Part_2,200,2048,1603,0,90
+Part_3,200,1833,1336,0,51
+Part_4,200,1941,1478,2,15
