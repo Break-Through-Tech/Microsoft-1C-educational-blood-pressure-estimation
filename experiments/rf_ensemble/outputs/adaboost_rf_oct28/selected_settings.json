@@ -1,0 +1,24 @@
+{
+  "AdaBoost": {
+    "params": {
+      "regressor__model__estimator__estimator__max_depth": 4,
+      "regressor__model__estimator__learning_rate": 0.05,
+      "regressor__model__estimator__n_estimators": 50
+    },
+    "selection_cv_mae": 12.068817361549677
+  },
+  "Regularized RF": {
+    "params": {
+      "regressor__model__max_depth": 8,
+      "regressor__model__min_samples_leaf": 10
+    },
+    "selection_cv_mae": 11.923794123217341
+  },
+  "Separate-target RF": {
+    "params": {
+      "regressor__model__estimator__max_depth": null,
+      "regressor__model__estimator__min_samples_leaf": 5
+    },
+    "selection_cv_mae": 11.83444550189362
+  }
+}

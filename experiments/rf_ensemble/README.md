@@ -25,3 +25,7 @@ The test set has now been evaluated. Do not use these results to tune models and
 ## Shared data preparation
 
 `expanded_data_analysis.py`, `signal_preprocessing.py`, and `plot_expanded_analysis.py` prepare and check the PPG features and ABP-derived labels used by the forest models. They do not train a neural network. The saved feature table is included so the modeling input and splits can be inspected. The wider tuning script and its outputs are included because they tune Random Forest. SVR and ResNet experiments are excluded.
+
+## AdaBoost and RF follow-up
+
+See [ADABOOST_RF_RESULTS.md](ADABOOST_RF_RESULTS.md) and [adaboost_rf.ipynb](adaboost_rf.ipynb). AdaBoost did not beat the original RF; separate-target RF gave only a small window-level change, with slightly worse equal-group MAE. These are validation-only experiments; the earlier test was not rescored. `compare_adaboost_rf.py` reproduces the new comparison after the original model checkpoints are regenerated.
