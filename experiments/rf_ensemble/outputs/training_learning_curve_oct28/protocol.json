@@ -1,0 +1,15 @@
+{
+  "seed": 20261028,
+  "test_evaluated": false,
+  "models": "Original RF and fixed histogram boosting",
+  "variants": [
+    "Original",
+    "Normalized",
+    "Original + pulse"
+  ],
+  "levels": "Nested original groups, plus half of new groups, plus all new groups; no target-based sampling",
+  "validation": "Fixed original windows; exploratory and repeatedly inspected",
+  "folds": "GroupKFold on complete training pool; restrict each fixed fold to nested subsets",
+  "feature_policy": "No new feature choice, model tuning, pressure bounds or quality gate changes",
+  "data_sha256": "f1efd7c4b020cd0e1ac0c802889322b51828d8916d06774e5a325a7b0bcc9d82"
+}

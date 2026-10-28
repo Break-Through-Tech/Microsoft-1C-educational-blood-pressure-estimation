@@ -1,0 +1,32 @@
+[
+  {
+    "variant": "Original + pulse",
+    "model": "RF",
+    "mean_target_equal_group_oof_mae": 11.28588867654946
+  },
+  {
+    "variant": "Normalized",
+    "model": "RF",
+    "mean_target_equal_group_oof_mae": 11.45282517268932
+  },
+  {
+    "variant": "Original",
+    "model": "RF",
+    "mean_target_equal_group_oof_mae": 11.48274670133368
+  },
+  {
+    "variant": "Original + pulse",
+    "model": "Boosting",
+    "mean_target_equal_group_oof_mae": 11.498342933238817
+  },
+  {
+    "variant": "Original",
+    "model": "Boosting",
+    "mean_target_equal_group_oof_mae": 11.590563531684921
+  },
+  {
+    "variant": "Normalized",
+    "model": "Boosting",
+    "mean_target_equal_group_oof_mae": 11.600444922595036
+  }
+]

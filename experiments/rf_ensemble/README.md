@@ -1,5 +1,7 @@
 # Random Forest and ensemble experiment
 
+**Latest experiment:** [Training-recording expansion](TRAINING_EXPANSION_RESULTS.md) increased training from 467 to 1,308 recordings. Expanded RF with added pulse features achieved exploratory validation MAE of 16.12/8.55 mmHg. Earlier final-test results remain unchanged.
+
 Charis Xiong · October 28, 2026
 
 This folder contains the PPG feature experiment: Random Forest, Extra Trees, histogram gradient boosting, and an equal-weight average of those three models. The comparison is complete for the current dataset.
@@ -33,3 +35,7 @@ See [ADABOOST_RF_RESULTS.md](ADABOOST_RF_RESULTS.md) and [adaboost_rf.ipynb](ada
 ## Preprocessing comparison
 
 [PREPROCESSING_COMPARISON_RESULTS.md](PREPROCESSING_COMPARISON_RESULTS.md) and [preprocessing_comparison.ipynb](preprocessing_comparison.ipynb) compare normalization, complete-pulse features and a different filter on identical development rows and labels. Improvements are small and mixed; the old test was not processed. `preprocessing_ablation.py --output-dir outputs/preprocessing_new_run` reproduces the experiment after raw MAT files are placed in this folder’s data directory. The shared dataset and original quality rules remain fixed.
+
+## Reproduce the training expansion
+
+Run `expand_training_recordings.py` and then `training_recording_learning_curve.py` from this folder with the raw MAT files in `data/`. Use new output directories for fresh runs and pass `--data-dir` to the learning-curve script if preparation uses a different directory. The scripts reuse the included October 14 split table and preprocessing feature cache. `summarize_training_learning_curve.py` reads saved predictions (CSV or gzip CSV) to regenerate the chart and comparisons. `verify_training_expansion.py` checks sampling, overlap exclusions, nested groups and unchanged validation rows/labels. The saved notebook shows the results without retraining.

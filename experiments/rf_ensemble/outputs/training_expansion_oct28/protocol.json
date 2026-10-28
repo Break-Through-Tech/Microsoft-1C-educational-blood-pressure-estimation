@@ -1,0 +1,12 @@
+{
+  "seed": 20261028,
+  "new_recordings_per_part": 250,
+  "maximum_windows_per_record": 12,
+  "selection": "Uniform source recording sample per Part, no targets",
+  "gates": "Unchanged October 14 gates and labels",
+  "validation": "Fixed original validation windows",
+  "test": "No test feature extraction or evaluation; source PPG only for overlap detection",
+  "planned_models": "Fixed original RF and fixed boosting; original, normalized and original-plus-pulse features",
+  "learning_curve": "Original training groups, plus first half, plus all eligible new groups in seeded nested order",
+  "caution": "Exploratory validation; repeated windows are not independent patients"
+}

@@ -1,0 +1,14 @@
+{
+  "new_sampled_records": 1000,
+  "new_sampled_windows": 9631,
+  "new_quality_eligible_windows": 7279,
+  "new_heldout_overlap_windows": 6,
+  "original_training_windows_excluded": 0,
+  "original_training_windows": 4013,
+  "total_training_windows": 11291,
+  "total_training_records": 1308,
+  "validation_windows": 857,
+  "test_evaluated": false,
+  "new_quality_eligible_before_overlap": 7284,
+  "new_training_windows_after_all_exclusions": 7278
+}
