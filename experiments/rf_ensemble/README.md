@@ -29,3 +29,7 @@ The test set has now been evaluated. Do not use these results to tune models and
 ## AdaBoost and RF follow-up
 
 See [ADABOOST_RF_RESULTS.md](ADABOOST_RF_RESULTS.md) and [adaboost_rf.ipynb](adaboost_rf.ipynb). AdaBoost did not beat the original RF; separate-target RF gave only a small window-level change, with slightly worse equal-group MAE. These are validation-only experiments; the earlier test was not rescored. `compare_adaboost_rf.py` reproduces the new comparison after the original model checkpoints are regenerated.
+
+## Preprocessing comparison
+
+[PREPROCESSING_COMPARISON_RESULTS.md](PREPROCESSING_COMPARISON_RESULTS.md) and [preprocessing_comparison.ipynb](preprocessing_comparison.ipynb) compare normalization, complete-pulse features and a different filter on identical development rows and labels. Improvements are small and mixed; the old test was not processed. `preprocessing_ablation.py --output-dir outputs/preprocessing_new_run` reproduces the experiment after raw MAT files are placed in this folder’s data directory. The shared dataset and original quality rules remain fixed.

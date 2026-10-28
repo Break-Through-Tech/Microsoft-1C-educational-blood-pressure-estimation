@@ -1,0 +1,52 @@
+[
+  {
+    "variant": "Normalized 37",
+    "model": "Boosting",
+    "mean_target_group_mae": 11.788833824294993
+  },
+  {
+    "variant": "Original + NK pulse shape",
+    "model": "RF",
+    "mean_target_group_mae": 11.81598970747239
+  },
+  {
+    "variant": "Original 37",
+    "model": "RF",
+    "mean_target_group_mae": 11.85480582385059
+  },
+  {
+    "variant": "Normalized 37",
+    "model": "RF",
+    "mean_target_group_mae": 11.866038981408693
+  },
+  {
+    "variant": "Bandpass pulse shape",
+    "model": "RF",
+    "mean_target_group_mae": 11.884045876713556
+  },
+  {
+    "variant": "Original + NK pulse shape",
+    "model": "Boosting",
+    "mean_target_group_mae": 11.906989882774754
+  },
+  {
+    "variant": "Original 37",
+    "model": "Boosting",
+    "mean_target_group_mae": 11.928517108793562
+  },
+  {
+    "variant": "NK pulse shape",
+    "model": "RF",
+    "mean_target_group_mae": 11.929998484408749
+  },
+  {
+    "variant": "Bandpass pulse shape",
+    "model": "Boosting",
+    "mean_target_group_mae": 11.93091479260792
+  },
+  {
+    "variant": "NK pulse shape",
+    "model": "Boosting",
+    "mean_target_group_mae": 11.978191014175902
+  }
+]

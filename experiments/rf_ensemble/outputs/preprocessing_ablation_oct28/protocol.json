@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-28",
+  "rows": 4870,
+  "test_processed": false,
+  "data_sha256": "f61e7b8ccb3da683ff27fb7f62bd2f5963c478544b2dc7620dbab3a174643697",
+  "selection": "Compare fixed-model variants by training-only grouped out-of-fold errors; validation exploratory",
+  "controls": "Same eligible rows, labels, groups, folds and fixed models across variants; no quality gate or target changes",
+  "variants": [
+    "Original 37",
+    "Normalized 37",
+    "NK pulse shape",
+    "Original + NK pulse shape",
+    "Bandpass pulse shape"
+  ],
+  "filtering": "NK ppg_clean default vs fourth-order Butterworth 0.5\u20138Hz, both full-record. Same NK peak positions for both pulse variants to isolate filtering effects.",
+  "normalization": "Per-window z-score; no cross-window fitted statistics",
+  "pulse_definition": "Minimum between successive fixed peaks defines feet; complete foot-peak-foot only; >=2 pulses otherwise shape values missing",
+  "missing_policy": "Keep all reference rows; median imputation fitted on each training fold. Record missing pulse counts.",
+  "model_policy": "RF original configuration; boosting prior fixed configuration. No parameter search in this experiment.",
+  "normalization_constants": "Normalized means fixed at 0 and SDs at 1 to prevent trees splitting floating-point noise"
+}
