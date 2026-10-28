@@ -1,0 +1,13 @@
+part,split,windows,records,overlap_groups
+Part_1,test,217,23,23
+Part_1,train,911,110,110
+Part_1,validation,207,26,26
+Part_2,test,268,28,28
+Part_2,train,1101,119,119
+Part_2,validation,234,24,24
+Part_3,test,179,23,23
+Part_3,train,953,119,118
+Part_3,validation,204,26,26
+Part_4,test,218,26,26
+Part_4,train,1048,119,119
+Part_4,validation,212,24,24

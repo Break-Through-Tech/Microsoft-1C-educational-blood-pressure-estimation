@@ -1,0 +1,75 @@
+{
+  "seed": 20261014,
+  "sklearn": "1.6.1",
+  "features": [
+    "ppg_raw_mean",
+    "ppg_raw_std",
+    "ppg_raw_iqr",
+    "ppg_raw_skew",
+    "ppg_raw_kurtosis",
+    "ppg_raw_p05",
+    "ppg_raw_p95",
+    "ppg_clean_mean",
+    "ppg_clean_std",
+    "ppg_clean_iqr",
+    "ppg_clean_skew",
+    "ppg_clean_kurtosis",
+    "ppg_clean_p05",
+    "ppg_clean_p95",
+    "vpg_mean",
+    "vpg_std",
+    "vpg_iqr",
+    "vpg_skew",
+    "vpg_kurtosis",
+    "vpg_p05",
+    "vpg_p95",
+    "apg_mean",
+    "apg_std",
+    "apg_iqr",
+    "apg_skew",
+    "apg_kurtosis",
+    "apg_p05",
+    "apg_p95",
+    "ppg_hr_bpm",
+    "ppg_interval_std",
+    "ppg_interval_cv",
+    "ppg_amplitude_mean",
+    "ppg_amplitude_std",
+    "ppg_half_height_duration",
+    "ppg_baseline_subtracted_area",
+    "ppg_dominant_frequency_hz",
+    "ppg_high_frequency_fraction"
+  ],
+  "training_windows": 4013,
+  "training_overlap_groups": 466,
+  "validation_windows": 857,
+  "validation_overlap_groups": 100,
+  "reserved_test_windows": 882,
+  "test_evaluated": false,
+  "selection": "27 configurations, three-fold GroupKFold by detected overlap group; mean multi-output MAE",
+  "grid": {
+    "regressor__forest__max_depth": [
+      8,
+      14,
+      null
+    ],
+    "regressor__forest__min_samples_leaf": [
+      2,
+      5,
+      10
+    ],
+    "regressor__forest__max_features": [
+      0.5,
+      0.8,
+      1.0
+    ]
+  },
+  "best_params": {
+    "regressor__forest__max_depth": 8,
+    "regressor__forest__max_features": 0.5,
+    "regressor__forest__min_samples_leaf": 2
+  },
+  "grouped_training_cv_mae": 11.823402048428553,
+  "n_estimators": 200,
+  "seed_forest": 20261014
+}
