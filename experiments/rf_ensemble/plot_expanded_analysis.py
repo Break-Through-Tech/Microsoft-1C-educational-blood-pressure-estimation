@@ -8,7 +8,7 @@ import neurokit2 as nk
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from prepare_resnet_data import waveform,paired_labels,FS,WIDTH
+from signal_preprocessing import waveform,paired_labels,FS,WIDTH
 
 ROOT=Path(__file__).resolve().parent
 EDA=ROOT/'outputs/expanded_eda_oct14'

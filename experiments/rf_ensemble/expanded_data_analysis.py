@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 from scipy.signal import welch
-from prepare_resnet_data import FS, WIDTH, waveform, paired_labels, window_labels, anchors, ConnectedRecords, key, trace_hash
+from signal_preprocessing import FS, WIDTH, waveform, paired_labels, window_labels, anchors, ConnectedRecords, key, trace_hash
 
 DEFAULT_OUTPUT = 'outputs/expanded_eda_oct14'
 

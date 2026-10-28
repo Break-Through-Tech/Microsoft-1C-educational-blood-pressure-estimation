@@ -21,3 +21,7 @@ Run commands from this folder. Install `requirements-eda.txt` in a Python enviro
 The notebook includes saved outputs. Cells that load `.joblib` checkpoints require a model rerun and an updated `RUN` path. The training scripts check dataset fingerprints, so changed data preparation cannot silently reuse the original checkpoints.
 
 The test set has now been evaluated. Do not use these results to tune models and then describe the same test as untouched. The earlier October 14 notes describe validation-only work; the October 28 report contains the final comparison.
+
+## Shared data preparation
+
+`expanded_data_analysis.py`, `signal_preprocessing.py`, and `plot_expanded_analysis.py` prepare and check the PPG features and ABP-derived labels used by the forest models. They do not train a neural network. The saved feature table is included so the modeling input and splits can be inspected. The wider tuning script and its outputs are included because they tune Random Forest. SVR and ResNet experiments are excluded.
