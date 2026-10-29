@@ -26,7 +26,7 @@ TARGETS = ['sbp', 'dbp']
 
 def load_data(directory):
     directory = Path(directory)
-    table = pd.read_csv(directory / 'expanded_features_and_split.csv')
+    table = pd.read_csv(directory / 'expanded_features_and_split.csv', low_memory=False)
     features = json.loads((directory / 'feature_columns.json').read_text())
     if not features or any(not name.startswith(('ppg_', 'vpg_', 'apg_')) for name in features):
         raise ValueError('Feature whitelist contains a non-PPG predictor')

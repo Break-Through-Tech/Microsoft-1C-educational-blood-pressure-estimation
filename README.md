@@ -122,4 +122,4 @@ Thank your Challenge Advisor, host company representatives, TA, and others who s
 
 ## Random Forest and ensemble results — October 28
 
-[Charis’s RF and ensemble work](experiments/rf_ensemble/README.md) compares Random Forest, Extra Trees, boosting and AdaBoost. After adding recordings and pulse features, the latest deeper RF reached validation MAE of **15.76 mmHg systolic / 8.34 mmHg diastolic**. These are development results; large errors remain at low and high pressures. See the [latest results](experiments/rf_ensemble/RF_REFINEMENT_RESULTS.md) for the comparison and limitations.
+[Charis’s RF and ensemble work](notebooks/experiments/rf_ensemble/README.md) compares Random Forest, Extra Trees, boosting and AdaBoost. After adding recordings and pulse features, the latest deeper RF reached validation MAE of **15.76 mmHg systolic / 8.34 mmHg diastolic**. These are development results; large errors remain at low and high pressures. See the [latest results](notebooks/experiments/rf_ensemble/RF_REFINEMENT_RESULTS.md) for the comparison and limitations.

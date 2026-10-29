@@ -1,7 +1,0 @@
-{
-  "best_params": {
-    "regressor__estimator__l2_regularization": 10.0,
-    "regressor__estimator__max_leaf_nodes": 7
-  },
-  "grouped_training_cv_mae": 11.960312604781393
-}
