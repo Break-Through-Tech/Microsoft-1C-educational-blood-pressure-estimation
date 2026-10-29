@@ -1,45 +1,45 @@
-# Random Forest and ensemble experiment
-
-**Latest experiment:** [Expanded RF refinement](RF_REFINEMENT_RESULTS.md) selected a deeper shared forest using training folds. Exploratory validation MAE is now 15.76/8.34 mmHg. The old test was not scored again.
+# Random Forest and ensemble models
 
 Charis Xiong · October 28, 2026
 
-This folder contains the PPG feature experiment: Random Forest, Extra Trees, histogram gradient boosting, and an equal-weight average of those three models. The comparison is complete for the current dataset.
+This folder contains the code and results for estimating systolic and diastolic blood pressure from PPG pulse signals. ABP supplies the pressure labels for training; it is not a model input.
 
-Start with [the results](ENSEMBLE_FINAL_RESULTS.md). The [RF notebook](random_forest.ipynb) explains the earlier validation experiments and ends with the final test results. Saved tables and figures are under `outputs/`; they can be read without running the models.
+## Current results
 
-On 882 test windows, RF achieved SBP/DBP MAE of 19.00/7.72 mmHg. Extra Trees had the lowest SBP MAE (18.60); the combined ensemble had the lowest DBP MAE (7.61). Improvements over the training-mean baseline were small, and the group-bootstrap intervals include no improvement. The labels remain provisional and the split does not establish patient independence.
+Adding training recordings and pulse-shape features helped more than the first round of parameter tuning. The latest candidate is a Random Forest with deeper trees, trained on 11,291 windows from 1,308 recordings.
 
-## Run the code
+These are **validation MAE** results on the same 857 windows. MAE is the average absolute error in mmHg; lower is better.
 
-Run commands from this folder. Install `requirements-eda.txt` in a Python environment (the original run used Python 3.9). Raw MAT files and generated model binaries are not committed.
+| Version | Systolic MAE | Diastolic MAE |
+|---|---:|---:|
+| Predict the training average | 18.70 | 10.02 |
+| Original Random Forest | 16.86 | 8.83 |
+| More recordings + pulse features | 16.12 | 8.55 |
+| Deeper Random Forest | **15.76** | **8.34** |
 
-1. Put `Part_1.mat` through `Part_4.mat` in `data/` here, or link this folder's `data` to the repository's root `data` folder.
-2. `python expanded_data_analysis.py` regenerates the feature dataset. This is a substantial signal-processing run and overwrites generated EDA tables, so preserve the committed outputs before rerunning.
-3. `python random_forest_pipeline.py --output-dir outputs/random_forest_new_run` trains RF, Extra Trees and baselines. The output directory must be new.
-4. In `finish_ensemble_comparison.py`, point `OLD` to that forest run and set `OUT` to a new directory. Run `OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 python finish_ensemble_comparison.py` to train boosting and report the fixed ensemble.
-5. `python -m unittest test_expanded_analysis -v` checks sampling, group separation and quality gates; these checks need the raw MAT files.
+The model still misses low and high pressures by a lot. These are development results on a validation set we have checked repeatedly. The newer model needs a fresh final test, and recording IDs do not establish that the patients are different.
 
-The notebook includes saved outputs. Cells that load `.joblib` checkpoints require a model rerun and an updated `RUN` path. The training scripts check dataset fingerprints, so changed data preparation cannot silently reuse the original checkpoints.
+## Start here
 
-The test set has now been evaluated. Do not use these results to tune models and then describe the same test as untouched. The earlier October 14 notes describe validation-only work; the October 28 report contains the final comparison.
+- [Latest results](RF_REFINEMENT_RESULTS.md): what changed and how the model performed.
+- [Latest notebook](rf_refinement.ipynb): saved tables, plots and the training comparison.
+- [Training-size comparison](TRAINING_EXPANSION_RESULTS.md): what happened when we added recordings.
+- [Preprocessing comparison](PREPROCESSING_COMPARISON_RESULTS.md): normalization, pulse features and filtering.
+- [AdaBoost comparison](ADABOOST_RF_RESULTS.md): AdaBoost did not beat the original RF.
+- [Earlier test results](ENSEMBLE_FINAL_RESULTS.md): the earlier RF/Extra Trees/boosting comparison. Those test scores are separate from the validation table above.
 
-## Shared data preparation
+## Run the latest experiment
 
-`expanded_data_analysis.py`, `signal_preprocessing.py`, and `plot_expanded_analysis.py` prepare and check the PPG features and ABP-derived labels used by the forest models. They do not train a neural network. The saved feature table is included so the modeling input and splits can be inspected. The wider tuning script and its outputs are included because they tune Random Forest. SVR and ResNet experiments are excluded.
+Run from this folder. Install `requirements-eda.txt` in a Python environment; the original environment used Python 3.9. Saved notebooks and CSV results can be read without retraining.
 
-## AdaBoost and RF follow-up
+```sh
+python -m pip install -r requirements-eda.txt
+python refine_expanded_rf.py --output-dir outputs/rf_refinement_new_run
+python -m unittest test_refine_expanded_rf test_predict_ppg_rf -v
+```
 
-See [ADABOOST_RF_RESULTS.md](ADABOOST_RF_RESULTS.md) and [adaboost_rf.ipynb](adaboost_rf.ipynb). AdaBoost did not beat the original RF; separate-target RF gave only a small window-level change, with slightly worse equal-group MAE. These are validation-only experiments; the earlier test was not rescored. `compare_adaboost_rf.py` reproduces the new comparison after the original model checkpoints are regenerated.
+This step uses the included feature tables and grouped training predictions. It refits the reference model if its binary is absent. Use a new output directory for each run. Raw MAT files, Python environments and model binaries are not committed.
 
-## Preprocessing comparison
+To rebuild features or expand the training sample, place `Part_1.mat` through `Part_4.mat` in this folder's `data/` directory and follow the corresponding results report. The original features come from `expanded_data_analysis.py`; shared signal helpers are in `signal_preprocessing.py`.
 
-[PREPROCESSING_COMPARISON_RESULTS.md](PREPROCESSING_COMPARISON_RESULTS.md) and [preprocessing_comparison.ipynb](preprocessing_comparison.ipynb) compare normalization, complete-pulse features and a different filter on identical development rows and labels. Improvements are small and mixed; the old test was not processed. `preprocessing_ablation.py --output-dir outputs/preprocessing_new_run` reproduces the experiment after raw MAT files are placed in this folder’s data directory. The shared dataset and original quality rules remain fixed.
-
-## Reproduce the training expansion
-
-Run `expand_training_recordings.py` and then `training_recording_learning_curve.py` from this folder with the raw MAT files in `data/`. Use new output directories for fresh runs and pass `--data-dir` to the learning-curve script if preparation uses a different directory. The scripts reuse the included October 14 split table and preprocessing feature cache. `summarize_training_learning_curve.py` reads saved predictions (CSV or gzip CSV) to regenerate the chart and comparisons. `verify_training_expansion.py` checks sampling, overlap exclusions, nested groups and unchanged validation rows/labels. The saved notebook shows the results without retraining.
-
-## RF refinement and PPG prediction
-
-`refine_expanded_rf.py --output-dir outputs/rf_refinement_new_run` tests the four focused presets using the included feature tables, fixed group folds and reference OOF predictions. It automatically refits the reference if its generated binary is absent, so raw data is not needed for this refinement stage. `rf_refinement.ipynb` shows saved results. `predict_ppg_rf.py` runs an explicitly selected trained model on a 125 Hz PPG recording; the report gives the input format and context requirements. Run `python -m unittest test_refine_expanded_rf test_predict_ppg_rf -v` for the new weighting and input checks. Model binaries stay local and must be regenerated from the scripts in a fresh upload.
+`predict_ppg_rf.py` runs a regenerated model on a 125 Hz PPG recording. See the latest results report for the command and input requirements.

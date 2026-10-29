@@ -122,4 +122,4 @@ Thank your Challenge Advisor, host company representatives, TA, and others who s
 
 ## Random Forest and ensemble results — October 28
 
-The completed [RF and ensemble experiment](experiments/rf_ensemble/README.md) includes code, a notebook, and saved validation/test results. On 882 test windows, RF achieved SBP/DBP MAE of 19.00/7.72 mmHg. Extra Trees had the lowest SBP MAE (18.60), and the combined ensemble had the lowest DBP MAE (7.61). Improvements over baseline were small and uncertain; see the [full results and limitations](experiments/rf_ensemble/ENSEMBLE_FINAL_RESULTS.md).
+[Charis’s RF and ensemble work](experiments/rf_ensemble/README.md) compares Random Forest, Extra Trees, boosting and AdaBoost. After adding recordings and pulse features, the latest deeper RF reached validation MAE of **15.76 mmHg systolic / 8.34 mmHg diastolic**. These are development results; large errors remain at low and high pressures. See the [latest results](experiments/rf_ensemble/RF_REFINEMENT_RESULTS.md) for the comparison and limitations.
