@@ -1,0 +1,29 @@
+{
+  "selected": "Deeper joint RF",
+  "reference": "Expanded reference RF",
+  "basis": "Lowest mean of target-wise group-macro OOF MAE; replacement needs >=0.05 mmHg mean gain and no target-wise group-macro MAE regression",
+  "group_macro_oof_scores": {
+    "Deeper joint RF": {
+      "dbp": 7.435138654146384,
+      "sbp": 14.936453763714802
+    },
+    "Expanded reference RF": {
+      "dbp": 7.557095501049295,
+      "sbp": 15.309562772907714
+    },
+    "Group-balanced reference RF": {
+      "dbp": 7.539027944267103,
+      "sbp": 15.379461453927874
+    },
+    "Group-balanced separate RF": {
+      "dbp": 7.410990395431772,
+      "sbp": 14.965270539429248
+    },
+    "Separate-target RF": {
+      "dbp": 7.469513866214245,
+      "sbp": 14.914530493657749
+    }
+  },
+  "test_evaluated": false,
+  "status": "Training-only decision written before validation prediction"
+}

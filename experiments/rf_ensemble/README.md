@@ -1,6 +1,6 @@
 # Random Forest and ensemble experiment
 
-**Latest experiment:** [Training-recording expansion](TRAINING_EXPANSION_RESULTS.md) increased training from 467 to 1,308 recordings. Expanded RF with added pulse features achieved exploratory validation MAE of 16.12/8.55 mmHg. Earlier final-test results remain unchanged.
+**Latest experiment:** [Expanded RF refinement](RF_REFINEMENT_RESULTS.md) selected a deeper shared forest using training folds. Exploratory validation MAE is now 15.76/8.34 mmHg. The old test was not scored again.
 
 Charis Xiong · October 28, 2026
 
@@ -39,3 +39,7 @@ See [ADABOOST_RF_RESULTS.md](ADABOOST_RF_RESULTS.md) and [adaboost_rf.ipynb](ada
 ## Reproduce the training expansion
 
 Run `expand_training_recordings.py` and then `training_recording_learning_curve.py` from this folder with the raw MAT files in `data/`. Use new output directories for fresh runs and pass `--data-dir` to the learning-curve script if preparation uses a different directory. The scripts reuse the included October 14 split table and preprocessing feature cache. `summarize_training_learning_curve.py` reads saved predictions (CSV or gzip CSV) to regenerate the chart and comparisons. `verify_training_expansion.py` checks sampling, overlap exclusions, nested groups and unchanged validation rows/labels. The saved notebook shows the results without retraining.
+
+## RF refinement and PPG prediction
+
+`refine_expanded_rf.py --output-dir outputs/rf_refinement_new_run` tests the four focused presets using the included feature tables, fixed group folds and reference OOF predictions. It automatically refits the reference if its generated binary is absent, so raw data is not needed for this refinement stage. `rf_refinement.ipynb` shows saved results. `predict_ppg_rf.py` runs an explicitly selected trained model on a 125 Hz PPG recording; the report gives the input format and context requirements. Run `python -m unittest test_refine_expanded_rf test_predict_ppg_rf -v` for the new weighting and input checks. Model binaries stay local and must be regenerated from the scripts in a fresh upload.

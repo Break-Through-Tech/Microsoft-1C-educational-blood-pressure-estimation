@@ -1,0 +1,6 @@
+{
+  "window_key": "Part_1:0032:0001",
+  "split": "train",
+  "model": "selected_rf.joblib",
+  "prediction_matches_saved_features": true
+}
