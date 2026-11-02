@@ -1,47 +1,34 @@
-# Random Forest and ensemble models
+# Random Forest with ECG — Charis
 
-**Latest: [Random Forest with ECG](RF_ECG_RESULTS.md).** On the same validation windows, ECG improved RF MAE from 15.76/8.34 to **15.03/7.63 mmHg**, with **77.8%** of DBP errors within 10 mmHg. Read [rf_ecg.ipynb](rf_ecg.ipynb) for the tables. These are development results, not a fresh final test.
+## Best RF result
 
-Charis Xiong · October 28, 2026
+Random Forest using **PPG + ECG** features, evaluated on **857 five-second validation windows from 100 recordings**.
 
-This folder contains the code and results for estimating systolic and diastolic blood pressure from PPG pulse signals. ABP supplies the pressure labels for training; it is not a model input.
-
-## Current results
-
-Adding training recordings and pulse-shape features helped more than the first round of parameter tuning. The latest candidate is a Random Forest with deeper trees, trained on 11,291 windows from 1,308 recordings.
-
-These are **validation MAE** results on the same 857 windows. MAE is the average absolute error in mmHg; lower is better.
-
-| Version | Systolic MAE | Diastolic MAE |
+| Metric | Systolic | Diastolic |
 |---|---:|---:|
-| Predict the training average | 18.70 | 10.02 |
-| Original Random Forest | 16.86 | 8.83 |
-| More recordings + pulse features | 16.12 | 8.55 |
-| Deeper Random Forest | **15.76** | **8.34** |
+| MAE | **15.03 mmHg** | **7.63 mmHg** |
+| RMSE | **20.43 mmHg** | **10.92 mmHg** |
+| Predictions within 10 mmHg | **49.0%** | **77.8%** |
 
-The model still misses low and high pressures by a lot. These are development results on a validation set we have checked repeatedly. The newer model needs a fresh final test, and recording IDs do not establish that the patients are different.
+MAE is the average absolute error; lower is better. “Within 10” is the percentage with absolute error <=10 mmHg, not classification accuracy.
 
-## Start here
+Training used 11,291 windows from 1,308 recordings, with 60 PPG features and 31 ECG features. ABP supplied reference labels only. The RF uses 200 trees, unlimited depth, minimum leaf size 5 and 80% of features considered per split.
 
-- [Latest results](RF_REFINEMENT_RESULTS.md): what changed and how the model performed.
-- [Latest notebook](rf_refinement.ipynb): saved tables, plots and the training comparison.
-- [Training-size comparison](TRAINING_EXPANSION_RESULTS.md): what happened when we added recordings.
-- [Preprocessing comparison](PREPROCESSING_COMPARISON_RESULTS.md): normalization, pulse features and filtering.
-- [AdaBoost comparison](ADABOOST_RF_RESULTS.md): AdaBoost did not beat the original RF.
-- [Earlier test results](ENSEMBLE_FINAL_RESULTS.md): the earlier RF/Extra Trees/boosting comparison. Those test scores are separate from the validation table above.
+These are validation results from development. The labels remain provisional, extreme-pressure errors remain large, and a fresh final evaluation is still needed. Recording IDs do not prove patient independence.
 
-## Run the latest experiment
+## Files
 
-Run from this folder. Install `requirements-eda.txt` in a Python environment; the original environment used Python 3.9. Saved notebooks and CSV results can be read without retraining.
+- [Results and methods](RF_ECG_RESULTS.md)
+- [Notebook with saved results](rf_ecg.ipynb)
+- `train_rf_ecg.py`: reproduce this RF comparison from the included feature tables.
+- `predict_ppg_ecg.py`: use a regenerated model with synchronized 125 Hz PPG/ECG signals.
+- `outputs/rf_ecg_nov1/`: data manifest, features, folds, predictions and metrics.
+
+Run from this folder with the project environment:
 
 ```sh
 python -m pip install -r requirements-eda.txt
-python refine_expanded_rf.py --output-dir outputs/rf_refinement_new_run
-python -m unittest test_refine_expanded_rf test_predict_ppg_rf -v
+python train_rf_ecg.py --output-dir outputs/rf_ecg_new_run
 ```
 
-This step uses the included feature tables and grouped training predictions. It refits the reference model if its binary is absent. Use a new output directory for each run. Raw MAT files, Python environments and model binaries are not committed.
-
-To rebuild features or expand the training sample, place `Part_1.mat` through `Part_4.mat` in this folder's `data/` directory and follow the corresponding results report. The original features come from `expanded_data_analysis.py`; shared signal helpers are in `signal_preprocessing.py`.
-
-`predict_ppg_rf.py` runs a regenerated model on a 125 Hz PPG recording. See the latest results report for the command and input requirements.
+Use a new output directory. Raw recordings and model binaries are not committed. Earlier experiment files remain for reproducibility; their scores are not the current RF result.

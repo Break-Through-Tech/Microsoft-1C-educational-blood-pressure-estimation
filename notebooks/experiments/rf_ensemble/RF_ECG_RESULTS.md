@@ -6,17 +6,17 @@
 
 These are five-second-window results on 857 validation windows from 100 recordings. Training used 11,291 windows from 1,308 recordings. The model uses 60 PPG features and 31 ECG/cross-signal features. ABP supplies the reference labels only.
 
-## Did ECG help?
+## Current validation metrics
 
-Both versions use the same windows, pressure labels, folds and RF settings.
+| Metric | Systolic | Diastolic |
+|---|---:|---:|
+| MAE | **15.03 mmHg** | **7.63 mmHg** |
+| RMSE | **20.43 mmHg** | **10.92 mmHg** |
+| Predictions within 10 mmHg | **49.0%** | **77.8%** |
 
-| Inputs | Systolic MAE | Diastolic MAE | Systolic RMSE | Diastolic RMSE | DBP within 10 |
-|---|---:|---:|---:|---:|---:|
-| PPG only | 15.76 | 8.34 | 21.23 | 11.44 | 69.5% |
-| PPG + ECG | **15.03** | **7.63** | **20.43** | **10.92** | **77.8%** |
-| Predict training average | 18.70 | 10.02 | 23.44 | 13.17 | 58.8% |
+MAE and RMSE are pressure errors; lower is better. “Within 10” means absolute error <=10 mmHg. It is not an overall accuracy score. The saved metrics also include within-5/15 percentages, signed error, R² and equal-group MAE.
 
-All pressure errors are mmHg; lower is better. “Within 10” means absolute error <=10 mmHg. It is not an overall accuracy score. The saved metrics also include percentages within 5 and 15, signed error, R² and equal-group MAE.
+For context, predicting the training average gives MAE of 18.70/10.02 on these same windows. The PPG+ECG RF improved on the PPG-only RF in the matched comparison; the full predictions remain available in the outputs folder.
 
 ## What the RF does
 
