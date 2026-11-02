@@ -1,0 +1,8 @@
+{
+  "exact_match_events": 2,
+  "training_windows_excluded": 0,
+  "validation_windows": 857,
+  "training_windows": 11291,
+  "groups_merged": 0,
+  "limitation": "Exact nonconstant ECG full records and selected windows only; shifted/near ECG overlaps not exhaustively checked"
+}

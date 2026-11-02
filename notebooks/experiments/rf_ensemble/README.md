@@ -1,5 +1,7 @@
 # Random Forest and ensemble models
 
+**Latest: [Random Forest with ECG](RF_ECG_RESULTS.md).** On the same validation windows, ECG improved RF MAE from 15.76/8.34 to **15.03/7.63 mmHg**, with **77.8%** of DBP errors within 10 mmHg. Read [rf_ecg.ipynb](rf_ecg.ipynb) for the tables. These are development results, not a fresh final test.
+
 Charis Xiong · October 28, 2026
 
 This folder contains the code and results for estimating systolic and diastolic blood pressure from PPG pulse signals. ABP supplies the pressure labels for training; it is not a model input.

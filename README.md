@@ -120,6 +120,6 @@ Cite relevant papers, articles, or resources that supported your project.
 
 Thank your Challenge Advisor, host company representatives, TA, and others who supported your project.
 
-## Random Forest and ensemble results — October 28
+## Random Forest with ECG — Charis
 
-[Charis’s RF and ensemble work](notebooks/experiments/rf_ensemble/README.md) compares Random Forest, Extra Trees, boosting and AdaBoost. After adding recordings and pulse features, the latest deeper RF reached validation MAE of **15.76 mmHg systolic / 8.34 mmHg diastolic**. These are development results; large errors remain at low and high pressures. See the [latest results](notebooks/experiments/rf_ensemble/RF_REFINEMENT_RESULTS.md) for the comparison and limitations.
+The [RF experiment](notebooks/experiments/rf_ensemble/RF_ECG_RESULTS.md) compares PPG-only with PPG+ECG on the same validation windows. RF with ECG reached **15.03 mmHg systolic MAE / 7.63 diastolic MAE**, with **77.8%** of DBP errors within 10 mmHg. The labels remain provisional; a fresh final evaluation is still needed.
