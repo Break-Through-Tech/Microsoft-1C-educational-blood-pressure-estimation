@@ -123,3 +123,5 @@ Thank your Challenge Advisor, host company representatives, TA, and others who s
 ## Random Forest with ECG — Charis
 
 The [RF experiment](notebooks/experiments/rf_ensemble/RF_ECG_RESULTS.md) compares PPG-only with PPG+ECG on the same validation windows. RF with ECG reached **15.03 mmHg systolic MAE / 7.63 diastolic MAE**, with **77.8%** of DBP errors within 10 mmHg. The labels remain provisional; a fresh final evaluation is still needed.
+
+The [working RF + ECG demo](notebooks/experiments/rf_ensemble/demo/blood_pressure_demo.ipynb) shows example predictions and validation results. [Run instructions](notebooks/experiments/rf_ensemble/demo/README.md).

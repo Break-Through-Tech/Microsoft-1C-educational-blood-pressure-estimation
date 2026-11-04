@@ -1,0 +1,42 @@
+[
+  {
+    "example": 1,
+    "window": "Part_1:2384:0072",
+    "matched": true
+  },
+  {
+    "example": 2,
+    "window": "Part_1:2429:0024",
+    "matched": true
+  },
+  {
+    "example": 3,
+    "window": "Part_2:2042:0083",
+    "matched": true
+  },
+  {
+    "example": 4,
+    "window": "Part_2:1397:0074",
+    "matched": true
+  },
+  {
+    "example": 5,
+    "window": "Part_3:0177:0008",
+    "matched": true
+  },
+  {
+    "example": 6,
+    "window": "Part_3:1627:0080",
+    "matched": true
+  },
+  {
+    "example": 7,
+    "window": "Part_4:2343:0089",
+    "matched": true
+  },
+  {
+    "example": 8,
+    "window": "Part_4:1042:0064",
+    "matched": true
+  }
+]

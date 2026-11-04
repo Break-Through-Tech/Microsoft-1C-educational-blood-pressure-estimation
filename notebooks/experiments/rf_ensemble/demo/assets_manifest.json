@@ -1,0 +1,22 @@
+{
+  "examples.csv": {
+    "bytes": 1435,
+    "sha256": "5c7f47017d25f38067f65f8f12a448257f5b2d4026a211d96db4a6b3b43ebb71"
+  },
+  "rf_ecg.joblib": {
+    "bytes": 15992033,
+    "sha256": "9eb137d9c5d0c556c83ae9f25cd76e21ffcf11c8b78b40c8b70500ac52e5b808"
+  },
+  "signals.npz": {
+    "bytes": 1290350,
+    "sha256": "03e48d2e30035396f70eadcb744b8f1c728b5a1450df4e76c5bef965527cb9aa"
+  },
+  "training_means.json": {
+    "bytes": 57,
+    "sha256": "fa401200671e5f638191cc6f1ad40eccfa22a4b211cf2cfb93d3e19e660db9e3"
+  },
+  "validation_metrics.csv": {
+    "bytes": 1354,
+    "sha256": "b4a36549b8f240733cfa29af1a80c3ac9cdb316cb7b09b371ba9f8fb08811dd8"
+  }
+}

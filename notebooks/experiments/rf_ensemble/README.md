@@ -1,5 +1,9 @@
 # Random Forest with ECG — Charis
 
+## Working demo
+
+[Open the demo notebook](demo/blood_pressure_demo.ipynb) for a short walkthrough with raw-signal predictions, waveform plots and the validation comparison. [Setup instructions](demo/README.md).
+
 ## Best RF result
 
 Random Forest using **PPG + ECG** features, evaluated on **857 five-second validation windows from 100 recordings**.
@@ -31,4 +35,4 @@ python -m pip install -r requirements-eda.txt
 python train_rf_ecg.py --output-dir outputs/rf_ecg_new_run
 ```
 
-Use a new output directory. Raw recordings and model binaries are not committed. Earlier experiment files remain for reproducibility; their scores are not the current RF result.
+Use a new output directory. The training dataset is not committed. The demo includes a small attributed signal sample and a compressed model so it can run without retraining. Earlier experiment files remain for reproducibility; their scores are not the current RF result.

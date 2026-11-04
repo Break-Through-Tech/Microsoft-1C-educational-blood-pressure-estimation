@@ -1,0 +1,6 @@
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+
+# Include the fitted model needed by this demo.
+!assets/rf_ecg.joblib
