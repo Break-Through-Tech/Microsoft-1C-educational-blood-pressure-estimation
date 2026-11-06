@@ -11,6 +11,7 @@ Estimating blood pressure from photoplethysmography (PPG) signals using machine 
 | Taylor Nguyen  | [@taylornguyen](https://github.com/taylornguyen)       | Data exploration, visualization, overall project coordination           |
 | Claire Zhu     | [@czhu1231](https://github.com/czhu1231)               | Data collection, exploratory data analysis (EDA), dataset documentation |
 | Katherine Shih | [@katherineShih113](https://github.com/katherineShih113) | Data preprocessing, feature engineering, data validation              |
+| Sri Lakshmi Anbarasan| [@srilakshmi-anbarasan](https://github.com/srilakshmi-anbarasan) | Data preprocessing, feature engineering, data validation|
 | Charis Xiong   | [@karrixxa](https://github.com/karrixxa)               | Data preprocessing, exploration, visualization, model evaluation        |
 | Chris Park     | [@chrispark](https://github.com/chrispark)             | Model evaluation, performance analysis, results interpretation          |
 | Emily Ta      | [@emilyta788](https://github.com/emilyta788)             | Model evaluation, performance analysis, results interpretation          |
