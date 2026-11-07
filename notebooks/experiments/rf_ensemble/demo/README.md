@@ -1,6 +1,6 @@
-# Random Forest demo — Charis
+# Random Forest and AdaBoost
 
-[Open the notebook](blood_pressure_demo.ipynb) to see the inputs, model setup, two example predictions and the PPG-only vs PPG + ECG results. Saved outputs are included for viewing on GitHub.
+[Open the notebook](blood_pressure_demo.ipynb) to see the inputs, model setup, an example prediction, validation plots and a Random Forest vs AdaBoost comparison. Saved outputs are included for viewing on GitHub.
 
 ## Run it
 
@@ -24,3 +24,5 @@ PPG + ECG RF validation MAE: **15.03 mmHg systolic / 7.63 mmHg diastolic**. **77
 [Full methods and results](../RF_ECG_RESULTS.md) · [Training notebook](../rf_ecg.ipynb) · [Data attribution](DATA_SOURCE.md)
 
 The bundled joblib model belongs to this experiment. Load serialized models only from sources you trust. `verification.json` records checks that the eight raw-signal predictions match the original validation predictions.
+
+[Speaker notes](ONE_MINUTE_NOTES.md) follow the notebook sections for a one-minute presentation.
