@@ -1,0 +1,19 @@
+Target,Range,Model,n,MAE,ME
+SBP,Low (<90),SVR (RBF),181,24.49,23.75
+SBP,Normal (90-119),SVR (RBF),1513,13.48,10.96
+SBP,Elevated (120-129),SVR (RBF),730,9.91,5.65
+SBP,Stage 1 (130-139),SVR (RBF),661,7.46,0.43
+SBP,Stage 2 (≥140),SVR (RBF),1772,15.07,-13.08
+SBP,Low (<90),SVR (weighted),181,22.36,21.32
+SBP,Normal (90-119),SVR (weighted),1513,14.39,11.27
+SBP,Elevated (120-129),SVR (weighted),730,11.05,6.34
+SBP,Stage 1 (130-139),SVR (weighted),661,8.96,1.5
+SBP,Stage 2 (≥140),SVR (weighted),1772,13.91,-10.26
+DBP,Low (<60),SVR (RBF),1871,5.84,5.26
+DBP,Normal (60-79),SVR (RBF),2400,4.78,-1.77
+DBP,Stage 1 (80-89),SVR (RBF),372,12.87,-12.52
+DBP,Stage 2 (≥90),SVR (RBF),214,27.22,-27.22
+DBP,Low (<60),SVR (weighted),1871,8.47,7.91
+DBP,Normal (60-79),SVR (weighted),2400,6.02,1.79
+DBP,Stage 1 (80-89),SVR (weighted),372,8.76,-5.91
+DBP,Stage 2 (≥90),SVR (weighted),214,19.46,-18.96
