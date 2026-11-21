@@ -1,0 +1,5 @@
+Target,Model,MAE,RMSE,R2,ME,SD,Slope,AAMI
+SBP,1D ResNet (v3),12.12,16.9,0.431,-0.54,16.89,0.518,Fail
+SBP,Mean baseline,18.46,22.4,0.0,-0.43,22.4,0.0,Fail
+DBP,1D ResNet (v3),6.25,9.51,0.339,-0.78,9.47,0.423,Fail
+DBP,Mean baseline,9.04,11.69,0.0,-0.15,11.69,0.0,Fail
