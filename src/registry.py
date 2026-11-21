@@ -9,6 +9,7 @@ data/test_samples.npz exist; otherwise demo mode (placeholder models + synthetic
 from __future__ import annotations
 
 import json
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -169,5 +170,14 @@ def get_runtime(paths: Paths | None = None, refresh: bool = False) -> Runtime:
     """Models, samples, metrics, residuals, bands, primary model and mode for the app."""
     paths = paths or Paths()
     if refresh or paths.root not in _CACHE:
-        _CACHE[paths.root] = _real_runtime(paths) or _demo_runtime()
+        try:
+            real = _real_runtime(paths)
+        except Exception as e:  # noqa: BLE001 - a broken upload must not take the app down
+            # e.g. a truncated .pt, malformed best_model.json or metrics.csv: serve demo mode and say why
+            print(f"[cuffless] real mode unavailable, falling back to demo: {type(e).__name__}: {e}", file=sys.stderr)
+            demo = _demo_runtime()
+            demo.notes.append(f"Real results were found but could not be loaded ({type(e).__name__}); showing demo data.")
+            _CACHE[paths.root] = demo
+        else:
+            _CACHE[paths.root] = real or _demo_runtime()
     return _CACHE[paths.root]

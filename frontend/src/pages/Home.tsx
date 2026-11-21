@@ -128,6 +128,9 @@ export default function HomePage() {
           of it and estimates systolic and diastolic pressure, with a range that shows how far off it can be. It is not a
           medical device.
         </p>
+        <p className="mt-6 inline-block rounded-[4px] border border-rule bg-surface px-4 py-2 text-sm text-muted-foreground">
+          Preview — more team models coming soon
+        </p>
       </header>
 
       <RealPulse />

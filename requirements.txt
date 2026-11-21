@@ -1,12 +1,10 @@
-h5py
-numpy
-pandas
-seaborn
-ipykernel
-neurokit2
-scipy
-torch
-pytest
-fastapi
-uvicorn[standard]
-httpx
+# Development: the app's runtime pins plus dataset building and tests.
+# Install: pip install -r requirements.txt
+-r requirements-app.txt
+h5py==3.16.0
+pytest==9.2.0
+httpx==0.28.1
+
+# Only for the teammates' notebooks (not used by the app or tests):
+# seaborn
+# ipykernel

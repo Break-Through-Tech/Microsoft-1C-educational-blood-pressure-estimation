@@ -1,0 +1,23 @@
+# Replit config for the CufflessAI preview. Toolchains come from Replit modules (the current
+# replacement for replit.nix): Python 3.12 and Node.js 22 (Vite 8 needs Node 20.19+ or 22.12+).
+modules = ["python-3.12", "nodejs-22"]
+
+# "Run" button in the workspace: install the pinned runtime deps (CPU-only PyTorch), then start.
+# scripts/start.py builds frontend/dist if it's missing and serves API + frontend on $PORT (8080).
+run = ["sh", "-c", "pip install -q -r requirements-app.txt && python scripts/start.py"]
+
+[nix]
+channel = "stable-24_05"
+
+[env]
+PORT = "8080"
+PYTHONUNBUFFERED = "1"
+
+[deployment]
+deploymentTarget = "cloudrun"
+build = ["sh", "-c", "pip install -r requirements-app.txt && cd frontend && npm ci --no-audit --no-fund && npm run build"]
+run = ["python", "scripts/start.py"]
+
+[[ports]]
+localPort = 8080
+externalPort = 80

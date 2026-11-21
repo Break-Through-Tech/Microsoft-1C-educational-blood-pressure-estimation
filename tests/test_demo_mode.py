@@ -40,3 +40,22 @@ def test_band_fallback_uses_test_residuals_provisionally():
     bands = compute_bands(df)
     assert bands["m"]["band_source"] == "test (provisional)"
     assert np.isclose(bands["m"]["sbp"]["half_width_mmHg"], 2.0)
+
+
+def test_broken_upload_falls_back_to_demo_instead_of_crashing(tmp_path):
+    """A half-uploaded deployment (corrupt checkpoint, bad JSON) must still start, in demo mode."""
+    from fastapi.testclient import TestClient
+    from backend.main import create_app
+
+    (tmp_path / "results").mkdir()
+    (tmp_path / "data").mkdir()
+    (tmp_path / "artifacts" / "resnet").mkdir(parents=True)
+    (tmp_path / "results" / "best_model.json").write_text('{"primary_model": "resnet_v3"}', encoding="utf-8")
+    (tmp_path / "results" / "metrics.csv").write_text("model,split,target,n,mae,rmse\n", encoding="utf-8")
+    (tmp_path / "data" / "test_samples.npz").write_bytes(b"not a zip")
+    (tmp_path / "artifacts" / "resnet" / "resnet_bp_v3.pt").write_bytes(b"truncated upload")
+    with TestClient(create_app(Paths(root=tmp_path))) as c:
+        h = c.get("/api/health").json()
+        assert h["mode"] == "demo"
+        assert any("could not be loaded" in n for n in h["notes"])
+        assert c.post("/api/predict", json={"sample_id": 0}).status_code == 200

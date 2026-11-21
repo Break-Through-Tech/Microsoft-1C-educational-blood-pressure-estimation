@@ -50,6 +50,60 @@ pip install -r requirements.txt
 
 ---
 
+## 🌐 Deploying the App on Replit (preview)
+
+The web app (FastAPI backend + React frontend) runs from a single command that builds the frontend if
+`frontend/dist` is missing and serves the API and the built pages on port 8080:
+
+```bash
+python scripts/start.py            # add --rebuild to force a fresh frontend build
+```
+
+Without trained results it starts in **demo mode** (synthetic signals, placeholder models, a "Demo data"
+badge). It switches to **real mode** once the result files below are present. Missing or broken uploads
+never stop the app from starting; it falls back to demo mode and `/api/health` says why.
+
+### 1. Import and run
+
+1. In Replit, choose **Create Repl → Import from GitHub** and pick this repository, branch `app-demo`.
+2. The repo's `.replit` sets everything up: Python 3.12, Node.js 22, CPU-only PyTorch from the pinned
+   `requirements-app.txt`, and the exact frontend versions in `frontend/package-lock.json`.
+3. Click **Run**. The first run installs dependencies and builds the frontend (a few minutes), then the
+   preview opens in demo mode.
+
+### 2. Upload the trained results
+
+These files are deliberately **not in git** (`.gitignore` excludes `artifacts/`, `results/` and `data/`).
+Upload them in Replit's **Files** pane (drag and drop, keeping the folder structure), from a teammate who
+has run `scripts/evaluate.py`:
+
+| Path | Size | What it is |
+|---|---|---|
+| `artifacts/resnet/resnet_bp_v3.pt` | 1.2 MB | ResNet checkpoint |
+| `artifacts/baseline/mean_baseline.json` | 1 KB | Mean baseline |
+| `results/best_model.json` | 2 KB | Which model is primary, and why |
+| `results/metrics.csv` | 1 KB | MAE / RMSE per model and split |
+| `results/residuals.csv` | 18 MB | Validation/test errors, used to size the 90% ranges |
+| `data/test_samples.npz` | 1 MB | The held-out sample recordings shown on Predict and Explain |
+
+Then **Stop** and **Run** again (the backend loads results once at startup). Open `/api/health`: it should
+say `"mode": "real"`. Only upload checkpoints the team produced: `.pt` files are loaded with
+`weights_only=False`, which can run code from an untrusted file.
+
+### 3. Publish
+
+Click **Deploy** and keep the settings from `.replit` (build: install + `npm ci` + `npm run build`; run:
+`python scripts/start.py`). Deployments are built from the workspace's files, so the uploads from step 2
+should be included even though git ignores them. Confirm it: the deployed `/api/health` must report
+`"mode": "real"`. If it says demo, the upload didn't make it into the deployment.
+
+Notes:
+- The app is an educational prototype and shows a "not a medical device" disclaimer on every page.
+- Uploaded signals and camera data are processed in memory and never stored.
+- If Replit offers a different Node module than `nodejs-22`, pick any Node 20.19+ or 22.12+ (Vite 8's minimum).
+
+---
+
 ## 🏗️ Project Overview
 
 This project explores whether blood pressure can be estimated from **photoplethysmography (PPG)**, an optical pulse signal that can be captured by wearable devices. PPG serves as the model input, while the corresponding arterial blood-pressure (ABP) waveform provides systolic and diastolic pressure targets. Before building models, we focused on understanding the recordings and assessing their quality.
