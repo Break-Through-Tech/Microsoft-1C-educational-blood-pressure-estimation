@@ -10,6 +10,7 @@ CUFFLESS_FRONTEND_DIST) and answers unknown non-API paths with index.html for cl
 """
 from __future__ import annotations
 
+import mimetypes
 import os
 import sys
 from contextlib import asynccontextmanager
@@ -37,6 +38,9 @@ from src.registry import Runtime, get_runtime, prepare_inputs                   
 TORCH_DEVICE = "cpu"
 DEFAULT_ORIGINS = "http://localhost:5173,http://127.0.0.1:5173"
 DEFAULT_FRONTEND_DIST = Path(__file__).resolve().parents[1] / "frontend" / "dist"
+# Windows registries often lack these; browsers need the right type to stream-compile WebAssembly
+mimetypes.add_type("application/wasm", ".wasm")
+mimetypes.add_type("text/javascript", ".js")
 
 
 # ---------------------------------------------------------------------------

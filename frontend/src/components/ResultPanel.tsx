@@ -55,7 +55,7 @@ export function ResultPanel({
         source={
           result.input.source === "sample"
             ? (source ?? "UCI Cuff-Less Blood Pressure Estimation dataset, held-out test recording.")
-            : `Your uploaded signal: the middle ${result.input.window_s} s of ${result.input.duration_s} s at ${result.input.fs_in} Hz. Not stored.`
+            : `Your signal: the middle ${result.input.window_s} s of ${result.input.duration_s.toFixed(1)} s at ${result.input.fs_in.toFixed(1)} Hz, resampled to 125 Hz. Not stored.`
         }
         notes={
           band ? (

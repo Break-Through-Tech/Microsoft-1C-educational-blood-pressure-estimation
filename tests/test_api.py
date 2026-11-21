@@ -110,6 +110,13 @@ def test_predict_rejects_invalid_input(client, body):
     assert client.post("/api/predict", json=body).status_code == 422
 
 
+def test_predict_accepts_webcam_frame_rate(client):
+    """A 15 fps camera signal (dim-light webcam) is resampled to TARGET_FS and scored like any other."""
+    r = client.post("/api/predict", json={"signal": _ppg(seconds=15, fs=15.0), "fs": 15.0})
+    assert r.status_code == 200, r.text
+    assert r.json()["input"]["fs_in"] == 15.0
+
+
 def test_predict_rejects_non_finite_values(client):
     sig = _ppg(fs=125)
     raw = "[" + ",".join(["NaN"] + [repr(v) for v in sig[1:]]) + "]"

@@ -13,7 +13,7 @@ export const DISCLAIMER =
   "Educational prototype only. Not a medical device; do not use it to diagnose, monitor or treat any condition.";
 
 // input limits for POST /api/predict (schemas.py: MIN_FS, MAX_FS, MIN_SECONDS, MAX_SECONDS)
-export const MIN_FS = 25;
+export const MIN_FS = 12;
 export const MAX_FS = 1000;
 export const MIN_SECONDS = 5;
 export const MAX_SECONDS = 120;

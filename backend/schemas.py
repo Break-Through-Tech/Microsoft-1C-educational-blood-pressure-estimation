@@ -18,7 +18,9 @@ DISCLAIMER = ("Educational prototype only. Not a medical device; do not use it t
               "monitor or treat any condition.")
 
 # input limits for POST /api/predict
-MIN_FS, MAX_FS = 25.0, 1000.0          # Hz
+# 12 Hz floor: the band-pass tops out at 5 Hz, so anything above 10 Hz keeps the pulse band; webcams
+# often run at 15 fps in dim light. Everything is resampled to TARGET_FS before preprocessing.
+MIN_FS, MAX_FS = 12.0, 1000.0          # Hz
 MIN_SECONDS, MAX_SECONDS = 5.0, 120.0  # at least one full 5 s window, as in training
 MAX_SIGNAL_SAMPLES = int(MAX_FS * MAX_SECONDS)
 

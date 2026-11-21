@@ -1,9 +1,10 @@
-import { useId, useMemo, useRef, useState, type DragEvent } from "react";
+import { Component, Suspense, lazy, useId, useMemo, useRef, useState, type DragEvent, type ReactNode } from "react";
+import { useSearchParams } from "react-router";
 import { Activity, FileUp, Lock, TriangleAlert, Video } from "lucide-react";
 import { MAX_FS, MAX_SECONDS, MIN_FS, MIN_SECONDS } from "@/api";
 import { OtherModels } from "@/components/OtherModels";
 import { ResultPanel, ResultSkeleton } from "@/components/ResultPanel";
-import { ChartFrame, EmptyState, ErrorCallout, PageHeader } from "@/components/States";
+import { ChartFrame, ChartSkeleton, EmptyState, ErrorCallout, PageHeader } from "@/components/States";
 import { WaveformChart } from "@/components/WaveformChart";
 import { Button } from "@/components/ui/button";
 import { Alert, Input, Label } from "@/components/ui/misc";
@@ -13,6 +14,28 @@ import { useModels, usePredict } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
 const MAX_FILE_BYTES = 20 * 1024 * 1024;
+
+// The camera feature is its own chunk (MediaPipe + WebAssembly); nothing else depends on it.
+const CameraCapture = lazy(() => import("@/components/CameraCapture"));
+
+/** If the camera code fails to load or crashes, contain it to this tab. */
+class CameraBoundary extends Component<{ children: ReactNode }, { failed: Error | null }> {
+  state = { failed: null as Error | null };
+  static getDerivedStateFromError(failed: Error) {
+    return { failed };
+  }
+  render() {
+    if (this.state.failed)
+      return (
+        <ErrorCallout
+          title="The camera feature couldn't start"
+          error={new Error(`${this.state.failed.message}. File upload still works; switch to the File tab.`)}
+          onRetry={() => this.setState({ failed: null })}
+        />
+      );
+    return this.props.children;
+  }
+}
 
 function CsvDropzone({ onFile, fileName }: { onFile: (f: File) => void; fileName: string | null }) {
   const input = useRef<HTMLInputElement>(null);
@@ -65,6 +88,7 @@ function CsvDropzone({ onFile, fileName }: { onFile: (f: File) => void; fileName
 }
 
 export default function TryYourOwnPage() {
+  const [params, setParams] = useSearchParams();
   const models = useModels();
   const predict = usePredict();
   const [fileName, setFileName] = useState<string | null>(null);
@@ -101,17 +125,20 @@ export default function TryYourOwnPage() {
   return (
     <>
       <PageHeader title="Try your own signal">
-        Upload a PPG recording you've captured, for example from a pulse sensor or a public dataset. It's checked in your
-        browser first, then sent once to make the estimate.
+        Upload a PPG recording from a pulse sensor, or measure your pulse with your webcam. Either way the signal is
+        checked in your browser first, then sent once to make the estimate, and never stored.
       </PageHeader>
 
-      <Tabs defaultValue="file">
+      <Tabs
+        value={params.get("tab") === "camera" ? "camera" : "file"}
+        onValueChange={(v) => setParams(v === "camera" ? { tab: "camera" } : {}, { replace: true })}
+      >
         <TabsList>
           <TabsTrigger value="file">
             <FileUp className="size-4" aria-hidden /> File
           </TabsTrigger>
-          <TabsTrigger value="camera" disabled>
-            <Video className="size-4" aria-hidden /> Camera (coming later)
+          <TabsTrigger value="camera">
+            <Video className="size-4" aria-hidden /> Camera
           </TabsTrigger>
         </TabsList>
         <TabsContent value="file">
@@ -224,6 +251,13 @@ export default function TryYourOwnPage() {
               </>
             )}
           </div>
+        </TabsContent>
+        <TabsContent value="camera">
+          <CameraBoundary>
+            <Suspense fallback={<ChartSkeleton height={240} />}>
+              <CameraCapture />
+            </Suspense>
+          </CameraBoundary>
         </TabsContent>
       </Tabs>
     </>

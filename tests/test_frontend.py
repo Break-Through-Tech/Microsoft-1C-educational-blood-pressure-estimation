@@ -53,3 +53,14 @@ def test_without_a_build_only_the_api_is_served(tmp_path):
         assert c.app.state.serves_frontend is False
         assert c.get("/").status_code == 404
         assert c.get("/api/health").status_code == 200
+
+
+def test_wasm_is_served_with_wasm_mime_type(tmp_path):
+    dist = tmp_path / "dist"
+    (dist / "mediapipe" / "wasm").mkdir(parents=True)
+    (dist / "index.html").write_text(INDEX, encoding="utf-8")
+    (dist / "mediapipe" / "wasm" / "x.wasm").write_bytes(b"\0asm\1\0\0\0")
+    with TestClient(create_app(Paths(root=tmp_path / "empty"), frontend_dist=dist)) as c:
+        r = c.get("/mediapipe/wasm/x.wasm")
+        assert r.status_code == 200
+        assert r.headers["content-type"] == "application/wasm"
