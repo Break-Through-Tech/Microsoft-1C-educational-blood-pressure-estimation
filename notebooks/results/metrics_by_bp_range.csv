@@ -1,0 +1,19 @@
+Target,Range,Model,n,MAE,ME
+SBP,Low (<90),1D ResNet (v3),1344,23.2,22.97
+SBP,Normal (90-119),1D ResNet (v3),28230,11.7,8.88
+SBP,Elevated (120-129),1D ResNet (v3),11749,8.21,2.84
+SBP,Stage 1 (130-139),1D ResNet (v3),11974,8.08,-0.88
+SBP,Stage 2 (≥140),1D ResNet (v3),25857,15.66,-13.44
+DBP,Low (<60),1D ResNet (v3),25263,5.66,5.01
+DBP,Normal (60-79),1D ResNet (v3),43766,4.72,-1.21
+DBP,Stage 1 (80-89),1D ResNet (v3),6414,9.15,-7.79
+DBP,Stage 2 (≥90),1D ResNet (v3),3711,23.38,-23.08
+SBP,Low (<90),Mean baseline,1344,44.6,44.6
+SBP,Normal (90-119),Mean baseline,28230,21.18,21.18
+SBP,Elevated (120-129),Mean baseline,11749,4.75,4.74
+SBP,Stage 1 (130-139),Mean baseline,11974,5.19,-5.19
+SBP,Stage 2 (≥140),Mean baseline,25857,26.52,-26.52
+DBP,Low (<60),Mean baseline,25263,10.88,10.88
+DBP,Normal (60-79),Mean baseline,43766,4.81,-1.28
+DBP,Stage 1 (80-89),Mean baseline,6414,17.05,-17.05
+DBP,Stage 2 (≥90),Mean baseline,3711,32.58,-32.58
