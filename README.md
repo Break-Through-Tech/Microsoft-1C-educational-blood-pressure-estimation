@@ -50,32 +50,51 @@ pip install -r requirements.txt
 
 ---
 
-## 🌐 Deploying the App on Replit (preview)
+## 🌐 Deploying the App on Hugging Face Spaces
 
-The web app (FastAPI backend + React frontend) runs from a single command that builds the frontend if
-`frontend/dist` is missing and serves the API and the built pages on port 8080:
+The web app (FastAPI backend + React frontend) runs in one Docker container, defined by `Dockerfile`.
+Locally, the same app starts with one command, which builds the frontend if `frontend/dist` is missing:
 
 ```bash
-python scripts/start.py            # add --rebuild to force a fresh frontend build
+python scripts/start.py            # http://localhost:8080; add --rebuild to force a fresh frontend build
 ```
 
-Without trained results it starts in **demo mode** (synthetic signals, placeholder models, a "Demo data"
-badge). It switches to **real mode** once the result files below are present. Missing or broken uploads
-never stop the app from starting; it falls back to demo mode and `/api/health` says why.
+Without trained results the app runs in **demo mode** (synthetic signals, placeholder models, a "Demo data"
+badge). With them it runs in **real mode**. Missing or broken result files never stop it from starting;
+it falls back to demo mode and `/api/health` says why.
 
-### 1. Import and run
+### 1. One-time setup
 
-1. In Replit, choose **Create Repl → Import from GitHub** and pick this repository, branch `app-demo`.
-2. The repo's `.replit` sets everything up: Python 3.12, Node.js 22, CPU-only PyTorch from the pinned
-   `requirements-app.txt`, and the exact frontend versions in `frontend/package-lock.json`.
-3. Click **Run**. The first run installs dependencies and builds the frontend (a few minutes), then the
-   preview opens in demo mode.
+1. Create a free account at [huggingface.co](https://huggingface.co) and a **write** access token
+   (Settings → Access Tokens).
+2. Install the dev requirements and log in:
 
-### 2. Upload the trained results
+   ```bash
+   .venv/Scripts/python -m pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
+   .venv/Scripts/hf auth login          # paste the token
+   ```
 
-These files are deliberately **not in git** (`.gitignore` excludes `artifacts/`, `results/` and `data/`).
-Upload them in Replit's **Files** pane (drag and drop, keeping the folder structure), from a teammate who
-has run `scripts/evaluate.py`:
+### 2. Deploy
+
+```bash
+# preview the file list without uploading
+.venv/Scripts/python scripts/deploy_hf.py --space <your-username>/cufflessai --dry-run
+
+# first deploy: creates the Space (Docker) and uploads the code and the trained results
+.venv/Scripts/python scripts/deploy_hf.py --space <your-username>/cufflessai --create --with-results
+```
+
+The Space builds the container (about 5 to 10 minutes the first time), then serves the app at
+`https://<your-username>-cufflessai.hf.space`. Open `/api/health` there: it should say `"mode": "real"`.
+
+Why a script instead of `git push`: a Space is its own git repo, and Hugging Face rejects pushes that
+contain binary files outside its large-file storage. This repo's history has images and `.npz` files, so a
+plain push fails. The script uploads a clean snapshot of only what the app needs (about 60 small code files,
+plus the result files when asked) and stores binaries correctly.
+
+### 3. The trained results
+
+`--with-results` uploads these six files, which are deliberately not in git:
 
 | Path | Size | What it is |
 |---|---|---|
@@ -86,21 +105,22 @@ has run `scripts/evaluate.py`:
 | `results/residuals.csv` | 18 MB | Validation/test errors, used to size the 90% ranges |
 | `data/test_samples.npz` | 1 MB | The held-out sample recordings shown on Predict and Explain |
 
-Then **Stop** and **Run** again (the backend loads results once at startup). Open `/api/health`: it should
-say `"mode": "real"`. Only upload checkpoints the team produced: `.pt` files are loaded with
-`weights_only=False`, which can run code from an untrusted file.
+They come from `scripts/evaluate.py`. You can also drag them into the Space's **Files** tab in the browser,
+keeping the folder paths. In a **public** Space anyone can download them from that tab; add `--private` to
+the first deploy if the team prefers (the app is then only visible to Space members).
 
-### 3. Publish
+### 4. Updating
 
-Click **Deploy** and keep the settings from `.replit` (build: install + `npm ci` + `npm run build`; run:
-`python scripts/start.py`). Deployments are built from the workspace's files, so the uploads from step 2
-should be included even though git ignores them. Confirm it: the deployed `/api/health` must report
-`"mode": "real"`. If it says demo, the upload didn't make it into the deployment.
+After new code lands on `app`, run the deploy again without `--with-results`. Uploaded results stay in
+place; the Space rebuilds automatically. When `scripts/evaluate.py` produces new results (for example, a
+teammate's model was added), run it with `--with-results` again.
 
 Notes:
-- The app is an educational prototype and shows a "not a medical device" disclaimer on every page.
-- Uploaded signals and camera data are processed in memory and never stored.
-- If Replit offers a different Node module than `nodejs-22`, pick any Node 20.19+ or 22.12+ (Vite 8's minimum).
+- Free Spaces sleep after a period without visitors; the first visit afterwards takes a minute while the
+  container starts and loads PyTorch.
+- `.pt` checkpoints are loaded with `weights_only=False`, so only deploy checkpoints the team produced.
+- Every page shows the "not a medical device" disclaimer. Uploaded signals and camera data are processed in
+  memory and never stored.
 
 ---
 

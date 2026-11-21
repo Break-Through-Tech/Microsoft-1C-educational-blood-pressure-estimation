@@ -59,7 +59,7 @@ complete, honest, reproducible end-to-end prototype, not on clinical accuracy.
 - No diagnostic labels (e.g. "hypertensive", AHA stages) on predictions.
 
 ## Git
-- Work only on `app-demo`. Bring in teammates' files with `git show origin/<branch>:<path>`; never
+- Work only on `app`. Bring in teammates' files with `git show origin/<branch>:<path>`; never
   merge, rebase or check out their branches.
 - Never commit anything under the local-only folders.
 
@@ -77,4 +77,7 @@ complete, honest, reproducible end-to-end prototype, not on clinical accuracy.
 - Build: `cd frontend && npm run build` → `frontend/dist`; then the backend alone serves the app at
   `http://localhost:8000` (`.venv/Scripts/python -m uvicorn backend.main:app --port 8000`), with unknown non-API
   paths falling back to `index.html`
+- Deploy (Hugging Face Space, Docker): `.venv/Scripts/python scripts/deploy_hf.py --space <user>/cufflessai`
+  (`--dry-run` to preview, `--create` the first time, `--with-results` to upload artifacts/results/samples)
+- Production start (what the container runs): `python scripts/start.py` (builds frontend/dist if missing; port 8080)
 - Test: `.venv/Scripts/python -m pytest` (only `tests/`; data-dependent tests skip when files are missing)

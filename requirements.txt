@@ -4,6 +4,7 @@
 h5py==3.16.0
 pytest==9.2.0
 httpx==0.28.1
+huggingface_hub==2.4.0   # scripts/deploy_hf.py
 
 # Only for the teammates' notebooks (not used by the app or tests):
 # seaborn

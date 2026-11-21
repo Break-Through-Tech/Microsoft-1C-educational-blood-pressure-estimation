@@ -1,9 +1,5 @@
 .venv/
 data/
-# Replit
-.pythonlibs/
-.upm/
-.cache/
 
 # Local-only (see CLAUDE.md): never commit uploads or teammates' working copies
 artifacts/

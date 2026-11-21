@@ -1,0 +1,19 @@
+# Keep the image to what the app needs (local `docker build` from the full repo).
+.git
+.venv
+.pythonlibs
+**/__pycache__
+**/*.pyc
+.pytest_cache
+frontend/node_modules
+frontend/dist
+notebooks
+tests
+Charis-results
+Claire-results
+SVR-sophia
+output.png
+data/cache
+data/cuff_less_bp_estimation
+data/splits.json
+deploy
