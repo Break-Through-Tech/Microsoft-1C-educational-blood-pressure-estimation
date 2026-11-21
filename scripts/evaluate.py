@@ -29,8 +29,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.paths import Paths                                                     # noqa: E402
 from src.preprocess import features_matrix, load_dataset, read_raw_window       # noqa: E402
-from src.registry import (MODEL_SPECS, compute_bands, error_metrics, predict_windows,  # noqa: E402
-                          residuals_frame)
+from src.registry import (MODEL_SPECS, SELECTION_RULE, compute_bands, error_metrics,  # noqa: E402
+                          predict_windows, residuals_frame)
 from src.split import load_splits, make_splits, split_indices                   # noqa: E402
 
 # what the ResNet notebook reported for v3 (Claire-results/metrics.csv), for the comparison printout
@@ -154,7 +154,7 @@ def main() -> None:
     residuals.to_csv(paths.residuals, index=False, float_format="%.3f")
     best = {
         "primary_model": primary,
-        "selection": "lowest validation MAE_SBP + MAE_DBP, baselines excluded; test metrics not used",
+        "selection": SELECTION_RULE,
         "validation_mae": {m: {"sbp": round(r.sbp, 3), "dbp": round(r.dbp, 3), "combined": round(r.combined, 3)}
                            for m, r in val.iterrows()},
         "test_mae_report_only": {m: {"sbp": round(r.sbp, 3), "dbp": round(r.dbp, 3)} for m, r in test.iterrows()},

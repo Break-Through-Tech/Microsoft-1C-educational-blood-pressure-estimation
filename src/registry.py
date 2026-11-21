@@ -42,6 +42,8 @@ MODEL_SPECS: list[ModelSpec] = [
 
 BAND_QUANTILE = 0.90
 TARGETS = ("sbp", "dbp")
+SELECTION_RULE = "lowest validation MAE_SBP + MAE_DBP, baselines excluded; test metrics not used"
+DEMO_SELECTION_RULE = "demo mode: placeholder model, nothing was selected"
 
 
 # ---------------------------------------------------------------------------
@@ -109,6 +111,7 @@ class Runtime:
     metrics: pd.DataFrame
     residuals: pd.DataFrame
     bands: dict
+    selection_rule: str = SELECTION_RULE
     notes: list[str] = field(default_factory=list)
 
 
@@ -131,8 +134,9 @@ def _real_runtime(paths: Paths) -> Runtime | None:
         columns=["model", "split", "subject_id", "true_sbp", "pred_sbp", "true_dbp", "pred_dbp"])
     return Runtime(mode="real", models=models, primary_model=spec.name, samples=samples,
                    metrics=pd.read_csv(paths.metrics), residuals=residuals,
-                   bands=compute_bands(residuals),
-                   notes=[f"primary model chosen on validation MAE: {best.get('selection')}"])
+                   bands=compute_bands(residuals), selection_rule=best.get("selection", SELECTION_RULE),
+                   notes=[f"evaluated {best.get('created', '?')}; split verified: "
+                          f"{best.get('split', {}).get('verified')}"])
 
 
 def _demo_runtime() -> Runtime:
@@ -155,7 +159,7 @@ def _demo_runtime() -> Runtime:
     residuals = pd.concat(frames, ignore_index=True)
     return Runtime(mode="demo", models=models, primary_model=DemoPulseModel.name, samples=samples,
                    metrics=pd.DataFrame(rows), residuals=residuals, bands=compute_bands(residuals),
-                   notes=["Demo data: synthetic signals and placeholder models; numbers are not real results."])
+                   selection_rule=DEMO_SELECTION_RULE, notes=["Demo data: synthetic signals and placeholder models; numbers are not real results."])
 
 
 _CACHE: dict[Path, Runtime] = {}

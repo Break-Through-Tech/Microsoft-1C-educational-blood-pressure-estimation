@@ -7,3 +7,6 @@ neurokit2
 scipy
 torch
 pytest
+fastapi
+uvicorn[standard]
+httpx
