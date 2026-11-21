@@ -72,6 +72,9 @@ complete, honest, reproducible end-to-end prototype, not on clinical accuracy.
 - Train / evaluate: `.venv/Scripts/python scripts/evaluate.py`
 - Run backend: `.venv/Scripts/python -m uvicorn backend.main:app --reload --port 8000` (docs at `/docs`;
   CORS origins via `CUFFLESS_CORS_ORIGINS`, default the Vite dev server on port 5173)
-- Run frontend: TODO
-- Build: TODO
+- Run frontend (dev, Node 20+): `cd frontend && npm install && npm run dev` (Vite on 5173 proxies `/api` to
+  the backend on 8000; override with `CUFFLESS_API`)
+- Build: `cd frontend && npm run build` → `frontend/dist`; then the backend alone serves the app at
+  `http://localhost:8000` (`.venv/Scripts/python -m uvicorn backend.main:app --port 8000`), with unknown non-API
+  paths falling back to `index.html`
 - Test: `.venv/Scripts/python -m pytest` (only `tests/`; data-dependent tests skip when files are missing)

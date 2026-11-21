@@ -4,6 +4,9 @@
 
 Loads src.registry.get_runtime() once at startup (real mode if evaluation results and artifacts
 exist, otherwise demo mode). Submitted signals are processed in memory and never written or logged.
+
+Production: after `npm run build` in frontend/, this server also serves frontend/dist (override with
+CUFFLESS_FRONTEND_DIST) and answers unknown non-API paths with index.html for client-side routes.
 """
 from __future__ import annotations
 
@@ -16,7 +19,8 @@ import numpy as np
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -32,6 +36,7 @@ from src.registry import Runtime, get_runtime, prepare_inputs                   
 
 TORCH_DEVICE = "cpu"
 DEFAULT_ORIGINS = "http://localhost:5173,http://127.0.0.1:5173"
+DEFAULT_FRONTEND_DIST = Path(__file__).resolve().parents[1] / "frontend" / "dist"
 
 
 # ---------------------------------------------------------------------------
@@ -97,7 +102,31 @@ def _source(rt: Runtime) -> str:
 # App
 # ---------------------------------------------------------------------------
 
-def create_app(paths: Paths | None = None) -> FastAPI:
+def _mount_frontend(app: FastAPI, dist: Path) -> bool:
+    """Serve the built React app. Registered last, so every /api route and /docs match first."""
+    dist = dist.resolve()
+    index = dist / "index.html"
+    if not index.is_file():
+        return False
+    if (dist / "assets").is_dir():
+        # Vite's content-hashed JS/CSS/fonts
+        app.mount("/assets", StaticFiles(directory=dist / "assets"), name="assets")
+
+    @app.get("/{path:path}", include_in_schema=False)
+    def spa(path: str):
+        if path == "api" or path.startswith("api/"):
+            raise HTTPException(404, f"unknown API route /{path}")
+        if path:
+            f = (dist / path).resolve()
+            if f.is_file() and f.is_relative_to(dist):          # e.g. favicon.svg; never outside dist
+                return FileResponse(f)
+        # client-side route (/predict, /about, ...): the router in index.html takes over
+        return FileResponse(index, headers={"Cache-Control": "no-cache"})
+
+    return True
+
+
+def create_app(paths: Paths | None = None, frontend_dist: Path | None = None) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         app.state.runtime = get_runtime(paths, refresh=True)     # load everything once
@@ -218,6 +247,9 @@ def create_app(paths: Paths | None = None) -> FastAPI:
                 band_source=band.get("band_source")))
         return MetricsResponse(mode=r.mode, primary_model=r.primary_model, selection_rule=r.selection_rule, rows=rows)
 
+    if frontend_dist is None:
+        frontend_dist = Path(os.environ.get("CUFFLESS_FRONTEND_DIST", DEFAULT_FRONTEND_DIST))
+    app.state.serves_frontend = _mount_frontend(app, frontend_dist)
     return app
 
 

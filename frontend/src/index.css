@@ -1,0 +1,230 @@
+@import "tailwindcss";
+@import "@fontsource-variable/public-sans";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  An educational data explainer. Off-white paper, near-black ink, ONE accent (the green of a PPG
+  sensor's LED) that marks the primary model and nothing else. 1px borders, no shadows, radius <= 6px.
+
+  Chart mapping, identical on every chart (see lib/tokens.ts):
+    true value / measured signal = --truth   primary model = --led
+    other models = --other-1..3 (muted)      baseline = --baseline, dashed
+*/
+:root {
+  --paper: #f7f7f4;
+  --surface: #ffffff;
+  --ink: #1c1f1e;
+  --muted: #5c6460;
+  --rule: #d8dbd7;
+  --led: #0b7a53;
+  --led-ink: #ffffff;
+  --led-soft: rgb(11 122 83 / 0.14);
+  --truth: #1c1f1e;
+  --baseline: #8e9591;
+  --other-1: #7f9a8e;
+  --other-2: #a39a7e;
+  --other-3: #7d8a9c;
+  --caution: #94520f;
+  --caution-soft: rgb(148 82 15 / 0.09);
+  --subtle: #eeefeb;
+  --ref-grey: var(--baseline);
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--led);
+  --primary-foreground: var(--led-ink);
+  --secondary: var(--subtle);
+  --secondary-foreground: var(--ink);
+  --muted-foreground: var(--muted);
+  --accent: var(--subtle);
+  --accent-foreground: var(--ink);
+  --destructive: var(--caution);
+  --border: var(--rule);
+  --input: var(--rule);
+  --ring: var(--led);
+  --radius: 6px;
+}
+
+.dark {
+  --paper: #151817;
+  --surface: #1b1f1d;
+  --ink: #e9ece9;
+  --muted: #a0a8a4;
+  --rule: #2f3532;
+  --led: #4fc291;
+  --led-ink: #0b1f16;
+  --led-soft: rgb(79 194 145 / 0.16);
+  --truth: #e9ece9;
+  --baseline: #7f8783;
+  --other-1: #8fae9f;
+  --other-2: #b8ad8e;
+  --other-3: #8e9cb0;
+  --caution: #e2a65c;
+  --caution-soft: rgb(226 166 92 / 0.12);
+  --subtle: #222725;
+}
+
+@theme inline {
+  /* one family: Public Sans, a Libre Franklin derivative and the U.S. Web Design System default (CDC, HHS) */
+  --font-sans: "Public Sans Variable", "Franklin Gothic Medium", "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-sans);
+
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-rule: var(--rule);
+  --color-led: var(--led);
+  --color-led-ink: var(--led-ink);
+  --color-led-soft: var(--led-soft);
+  --color-truth: var(--truth);
+  --color-baseline: var(--baseline);
+  --color-other-1: var(--other-1);
+  --color-other-2: var(--other-2);
+  --color-other-3: var(--other-3);
+  --color-caution: var(--caution);
+  --color-caution-soft: var(--caution-soft);
+  --color-subtle: var(--subtle);
+  --color-ref-grey: var(--ref-grey);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--subtle);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* radius never exceeds 6px */
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 6px;
+
+  /* type scale: 13 / 15 / 17 / 21 / 28 / 40 / 56 / 80 */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.45;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.5;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.6;
+  --text-lg: 1.3125rem;
+  --text-lg--line-height: 1.35;
+  --text-xl: 1.75rem;
+  --text-xl--line-height: 1.2;
+  --text-2xl: 2.5rem;
+  --text-2xl--line-height: 1.08;
+  --text-3xl: 3.5rem;
+  --text-3xl--line-height: 1.02;
+  --text-4xl: 5rem;
+  --text-4xl--line-height: 1;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-paper text-ink font-sans text-base antialiased;
+  }
+  h1,
+  h2 {
+    @apply font-display text-balance;
+  }
+  h1 {
+    @apply font-bold tracking-[-0.025em];
+  }
+  h2 {
+    @apply font-semibold tracking-[-0.015em];
+  }
+  h3 {
+    @apply font-semibold text-balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-led;
+  }
+}
+
+/* every number: tabular lining figures, so columns and readings line up */
+@utility num {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+@layer base {
+  .recharts-text,
+  .recharts-label {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+}
+
+@utility measure {
+  max-width: 66ch;
+}
+
+/* a chart or figure: 1px border on white, no shadow */
+@utility frame {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+
+/* the home trace draws at the speed it was recorded */
+@keyframes trace-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* an estimate's likely range grows out of the estimate: uncertainty is part of the answer */
+@keyframes band-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
