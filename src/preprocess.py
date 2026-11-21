@@ -14,10 +14,11 @@ from __future__ import annotations
 import json
 import time
 from fractions import Fraction
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
-from scipy.signal import find_peaks, resample_poly
+from scipy.signal import butter, find_peaks, resample_poly, sosfiltfilt
 from scipy.stats import kurtosis, skew
 
 from .paths import Paths
@@ -39,16 +40,26 @@ CACHE_VERSION = "ppg-v3-1"
 # Signal steps (same calls and parameters as the notebook)
 # ---------------------------------------------------------------------------
 
+# These two reproduce the notebook's neurokit2 calls exactly (bit-identical output, checked in
+# tests/test_preprocess_equivalence.py) without importing neurokit2 at runtime, which saves ~60 MB of
+# memory and its matplotlib/scikit-learn dependencies in the deployed app.
+
 def remove_mean(x: np.ndarray) -> np.ndarray:
-    import neurokit2 as nk
-    return nk.signal_detrend(np.asarray(x, dtype=float), order=0)
+    """= nk.signal_detrend(x, order=0): subtract a degree-0 polynomial fit on linspace(0, 100, n)."""
+    x = np.asarray(x, dtype=float)
+    grid = np.linspace(0, 100, len(x))
+    return x - np.polyval(np.polyfit(grid, x, 0), grid)
+
+
+@lru_cache(maxsize=8)
+def _butter_sos(order: int, low: float, high: float, fs: float) -> np.ndarray:
+    return butter(order, [low, high], btype="bandpass", output="sos", fs=fs)
 
 
 def bandpass_filter(x: np.ndarray, fs: int = TARGET_FS, low: float = BANDPASS_HZ[0],
                     high: float = BANDPASS_HZ[1], order: int = FILTER_ORDER) -> np.ndarray:
-    import neurokit2 as nk
-    return nk.signal_filter(x, sampling_rate=fs, lowcut=low, highcut=high,
-                            method="butterworth", order=order)
+    """= nk.signal_filter(x, method="butterworth"): Butterworth SOS band-pass, zero-phase (sosfiltfilt)."""
+    return sosfiltfilt(_butter_sos(order, low, high, float(fs)), np.asarray(x, dtype=float))
 
 
 def normalize(x: np.ndarray) -> np.ndarray:

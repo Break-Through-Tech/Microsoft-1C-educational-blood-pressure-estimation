@@ -131,11 +131,16 @@ def _real_runtime(paths: Paths) -> Runtime | None:
     models = load_models(paths)
     with np.load(paths.test_samples) as s:
         samples = {k: s[k] for k in s.files}
-    residuals = pd.read_csv(paths.residuals) if paths.residuals.exists() else pd.DataFrame(
-        columns=["model", "split", "subject_id", "true_sbp", "pred_sbp", "true_dbp", "pred_dbp"])
+    band_cols = ["model", "split", "true_sbp", "pred_sbp", "true_dbp", "pred_dbp"]
+    residuals = (pd.read_csv(paths.residuals, usecols=band_cols, dtype={"model": "category", "split": "category"})
+                 if paths.residuals.exists() else pd.DataFrame(columns=band_cols))
+    bands = compute_bands(residuals)
+    # the residuals are only needed to size the bands; keep an empty frame so memory stays low
+    # (matters on small hosts: residuals.csv has one row per test/validation window)
+    del residuals
     return Runtime(mode="real", models=models, primary_model=spec.name, samples=samples,
-                   metrics=pd.read_csv(paths.metrics), residuals=residuals,
-                   bands=compute_bands(residuals), selection_rule=best.get("selection", SELECTION_RULE),
+                   metrics=pd.read_csv(paths.metrics), residuals=pd.DataFrame(columns=band_cols),
+                   bands=bands, selection_rule=best.get("selection", SELECTION_RULE),
                    notes=[f"evaluated {best.get('created', '?')}; split verified: "
                           f"{best.get('split', {}).get('verified')}"])
 

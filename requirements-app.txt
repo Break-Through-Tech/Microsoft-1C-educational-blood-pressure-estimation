@@ -5,7 +5,6 @@ torch==2.15.0+cpu
 numpy==2.5.5
 pandas==3.1.1
 scipy==1.18.1
-neurokit2==0.3.0
 fastapi==0.165.0
 pydantic==2.14.4
 uvicorn[standard]==0.54.0

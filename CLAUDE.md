@@ -77,7 +77,8 @@ complete, honest, reproducible end-to-end prototype, not on clinical accuracy.
 - Build: `cd frontend && npm run build` → `frontend/dist`; then the backend alone serves the app at
   `http://localhost:8000` (`.venv/Scripts/python -m uvicorn backend.main:app --port 8000`), with unknown non-API
   paths falling back to `index.html`
-- Deploy (Hugging Face Space, Docker): `.venv/Scripts/python scripts/deploy_hf.py --space <user>/cufflessai`
-  (`--dry-run` to preview, `--create` the first time, `--with-results` to upload artifacts/results/samples)
+- Deploy (Render, Docker via `render.yaml`): push to `app`. Trained results are not in git: pack them with
+  `.venv/Scripts/python -m src.results_bundle pack` and serve the zip privately; the app downloads it at
+  startup from `CUFFLESS_RESULTS_URL` (+ `CUFFLESS_RESULTS_TOKEN`, `CUFFLESS_RESULTS_SHA256`). See README.
 - Production start (what the container runs): `python scripts/start.py` (builds frontend/dist if missing; port 8080)
 - Test: `.venv/Scripts/python -m pytest` (only `tests/`; data-dependent tests skip when files are missing)

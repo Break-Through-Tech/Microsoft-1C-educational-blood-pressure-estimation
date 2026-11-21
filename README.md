@@ -50,53 +50,30 @@ pip install -r requirements.txt
 
 ---
 
-## 🌐 Deploying the App on Hugging Face Spaces
+## 🌐 Deploying the App on Render
 
-The web app (FastAPI backend + React frontend) runs in one Docker container, defined by `Dockerfile`.
-Locally, the same app starts with one command, which builds the frontend if `frontend/dist` is missing:
+The web app (FastAPI backend + React frontend) runs in one Docker container (`Dockerfile`), described for
+Render in `render.yaml`. Locally, the same app starts with one command, which builds the frontend if
+`frontend/dist` is missing:
 
 ```bash
 python scripts/start.py            # http://localhost:8080; add --rebuild to force a fresh frontend build
 ```
 
 Without trained results the app runs in **demo mode** (synthetic signals, placeholder models, a "Demo data"
-badge). With them it runs in **real mode**. Missing or broken result files never stop it from starting;
-it falls back to demo mode and `/api/health` says why.
+badge). With them it runs in **real mode**. Missing or broken result files never stop it from starting; it
+falls back to demo mode and `/api/health` says why.
 
-### 1. One-time setup
+### 1. Package the trained results (once per new set of results)
 
-1. Create a free account at [huggingface.co](https://huggingface.co) and a **write** access token
-   (Settings → Access Tokens).
-2. Install the dev requirements and log in:
-
-   ```bash
-   .venv/Scripts/python -m pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
-   .venv/Scripts/hf auth login          # paste the token
-   ```
-
-### 2. Deploy
+Render builds only from git, and the six result files are deliberately not in git. The app downloads them
+at startup from a private URL instead. Pack them into one zip:
 
 ```bash
-# preview the file list without uploading
-.venv/Scripts/python scripts/deploy_hf.py --space <your-username>/cufflessai --dry-run
-
-# first deploy: creates the Space (Docker) and uploads the code and the trained results
-.venv/Scripts/python scripts/deploy_hf.py --space <your-username>/cufflessai --create --with-results
+.venv/Scripts/python -m src.results_bundle pack       # writes results-bundle.zip, prints its SHA-256
 ```
 
-The Space builds the container (about 5 to 10 minutes the first time), then serves the app at
-`https://<your-username>-cufflessai.hf.space`. Open `/api/health` there: it should say `"mode": "real"`.
-
-Why a script instead of `git push`: a Space is its own git repo, and Hugging Face rejects pushes that
-contain binary files outside its large-file storage. This repo's history has images and `.npz` files, so a
-plain push fails. The script uploads a clean snapshot of only what the app needs (about 60 small code files,
-plus the result files when asked) and stores binaries correctly.
-
-### 3. The trained results
-
-`--with-results` uploads these six files, which are deliberately not in git:
-
-| Path | Size | What it is |
+| File in the zip | Size | What it is |
 |---|---|---|
 | `artifacts/resnet/resnet_bp_v3.pt` | 1.2 MB | ResNet checkpoint |
 | `artifacts/baseline/mean_baseline.json` | 1 KB | Mean baseline |
@@ -105,20 +82,51 @@ plus the result files when asked) and stores binaries correctly.
 | `results/residuals.csv` | 18 MB | Validation/test errors, used to size the 90% ranges |
 | `data/test_samples.npz` | 1 MB | The held-out sample recordings shown on Predict and Explain |
 
-They come from `scripts/evaluate.py`. You can also drag them into the Space's **Files** tab in the browser,
-keeping the folder paths. In a **public** Space anyone can download them from that tab; add `--private` to
-the first deploy if the team prefers (the app is then only visible to Space members).
+### 2. Put the zip somewhere private
+
+Recommended: a release in a **private** GitHub repo (for example `<you>/cufflessai-results`).
+
+1. Create the private repo on GitHub, then **Releases → Draft a new release**, tag `v1`, attach
+   `results-bundle.zip`, publish. (Or: `gh release create v1 results-bundle.zip --repo <you>/cufflessai-results`.)
+2. Get the asset's API URL:
+   `gh api repos/<you>/cufflessai-results/releases/tags/v1 --jq ".assets[0].url"`
+   It looks like `https://api.github.com/repos/<you>/cufflessai-results/releases/assets/123456789`.
+3. Create a **fine-grained personal access token** (GitHub → Settings → Developer settings) with access to
+   only that repo and **Contents: Read-only**.
+
+Any other private HTTPS link to the zip works too; the token is sent as `Authorization: Bearer <token>`.
+
+### 3. Create the service on Render
+
+1. On [render.com](https://render.com), choose **New → Blueprint** and connect this GitHub repository.
+   Render reads `render.yaml`: a free Docker web service built from the `app` branch, with a health check.
+   (Connecting a repo owned by a GitHub organization may need an org admin to approve Render's GitHub app.)
+2. When asked for the environment variables, enter:
+
+   | Key | Value |
+   |---|---|
+   | `CUFFLESS_RESULTS_URL` | the asset API URL from step 2 |
+   | `CUFFLESS_RESULTS_TOKEN` | the fine-grained token |
+   | `CUFFLESS_RESULTS_SHA256` | the SHA-256 printed in step 1 |
+
+3. Deploy. The first build takes several minutes. Then open `https://<service>.onrender.com/api/health`:
+   it should say `"mode": "real"`. If it says `"demo"`, the service log shows a `[results]` line explaining
+   why (wrong URL or token, or a checksum mismatch).
+
+The checksum matters: `.pt` checkpoints are loaded with `weights_only=False`, so the app refuses a bundle
+whose SHA-256 doesn't match instead of loading a swapped file.
 
 ### 4. Updating
 
-After new code lands on `app`, run the deploy again without `--with-results`. Uploaded results stay in
-place; the Space rebuilds automatically. When `scripts/evaluate.py` produces new results (for example, a
-teammate's model was added), run it with `--with-results` again.
+- **Code:** push to `app`. Render rebuilds and redeploys automatically.
+- **New results** (for example, after a teammate's model is added and `scripts/evaluate.py` is rerun): pack a
+  new zip, attach it to a new release, then update `CUFFLESS_RESULTS_URL` and `CUFFLESS_RESULTS_SHA256` in
+  the Render dashboard. Saving the variables redeploys the service.
 
 Notes:
-- Free Spaces sleep after a period without visitors; the first visit afterwards takes a minute while the
-  container starts and loads PyTorch.
-- `.pt` checkpoints are loaded with `weights_only=False`, so only deploy checkpoints the team produced.
+- Free Render services sleep after a period without visitors; the first visit afterwards takes up to a
+  minute while the container starts and loads PyTorch. The results are downloaded again on each start.
+- The app uses about 330 MB of memory (free instances have 512 MB): one worker, one inference thread.
 - Every page shows the "not a medical device" disclaimer. Uploaded signals and camera data are processed in
   memory and never stored.
 

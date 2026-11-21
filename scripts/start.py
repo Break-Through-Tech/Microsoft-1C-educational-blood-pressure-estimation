@@ -4,7 +4,8 @@
     python scripts/start.py --rebuild  # force a fresh frontend build first
 
 Real mode if results/, artifacts/ and data/test_samples.npz are present and loadable; otherwise the
-app starts in demo mode (it never crashes on missing or broken uploads).
+app starts in demo mode (it never crashes on missing or broken files). If CUFFLESS_RESULTS_URL is set
+and those files are missing, they are downloaded first (see src/results_bundle.py).
 """
 from __future__ import annotations
 
@@ -51,6 +52,9 @@ def main() -> None:
 
     os.chdir(ROOT)
     sys.path.insert(0, str(ROOT))
+    # hosts that build only from git (Render) fetch the trained results at startup, if configured
+    from src.results_bundle import fetch_if_configured
+    fetch_if_configured()
     import uvicorn
 
     print(f"[start] serving on http://{args.host}:{args.port}", flush=True)

@@ -16,4 +16,4 @@ output.png
 data/cache
 data/cuff_less_bp_estimation
 data/splits.json
-deploy
+results-bundle.zip

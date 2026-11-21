@@ -1,0 +1,21 @@
+# Render Blueprint for the CufflessAI web app (Dashboard: New > Blueprint > pick this repo).
+# Builds the Dockerfile, serves API + frontend, and redeploys on every push to the `app` branch.
+services:
+  - type: web
+    name: cufflessai
+    runtime: docker
+    plan: free
+    branch: app
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      # Trained results (not in git). Leave unset for demo mode. Values are entered in the dashboard
+      # (sync: false), never committed. See "Deploying the App on Render" in README.md.
+      - key: CUFFLESS_RESULTS_URL
+        sync: false
+      - key: CUFFLESS_RESULTS_TOKEN
+        sync: false
+      - key: CUFFLESS_RESULTS_SHA256
+        sync: false

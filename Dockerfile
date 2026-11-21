@@ -1,6 +1,7 @@
-# CufflessAI web app: FastAPI backend + built React frontend in one container.
-# Used by the Hugging Face Space (sdk: docker, app_port: 8080); runs the same anywhere Docker runs:
+# CufflessAI web app: FastAPI backend + built React frontend in one container (used by Render, render.yaml).
 #   docker build -t cufflessai . && docker run -p 8080:8080 cufflessai
+# The trained results are not in git: mount them, or set CUFFLESS_RESULTS_URL so start.py downloads them
+# (see src/results_bundle.py). Without them the app runs in demo mode.
 
 # --- 1. build the frontend --------------------------------------------------------------------
 FROM node:22-bookworm-slim AS web
@@ -12,23 +13,25 @@ RUN npm run build
 
 # --- 2. runtime ---------------------------------------------------------------------------------
 FROM python:3.12-slim
+# PORT: Render sets its own; 8080 is the local default.
+# OMP_NUM_THREADS / MALLOC_ARENA_MAX: one inference thread and fewer malloc arenas keep memory well under
+# a 512 MB instance; single-window CPU inference doesn't benefit from more threads.
 ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PORT=8080 \
-    HOME=/home/user
-# Hugging Face runs Spaces as UID 1000
-RUN useradd --create-home --uid 1000 user
-WORKDIR /home/user/app
+    OMP_NUM_THREADS=1 \
+    MKL_NUM_THREADS=1 \
+    MALLOC_ARENA_MAX=2
+RUN useradd --create-home --uid 1000 app
+WORKDIR /home/app/app
 
-COPY --chown=user requirements-app.txt ./
+COPY --chown=app requirements-app.txt ./
 RUN pip install -r requirements-app.txt
 
-# App code, plus artifacts/, results/ and data/test_samples.npz if they were uploaded to the Space.
-# Without them the app starts in demo mode.
-COPY --chown=user . ./
-COPY --chown=user --from=web /build/frontend/dist ./frontend/dist
+COPY --chown=app . ./
+COPY --chown=app --from=web /build/frontend/dist ./frontend/dist
 
-USER user
+USER app
 EXPOSE 8080
-CMD ["python", "scripts/start.py", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["python", "scripts/start.py"]
