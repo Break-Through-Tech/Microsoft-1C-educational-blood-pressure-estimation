@@ -9,7 +9,7 @@ import { seriesColor, useChartColors } from "@/lib/tokens";
 import { WaveformChart, toPoints } from "@/components/WaveformChart";
 import { Label, Skeleton } from "@/components/ui/misc";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, ToggleGroup, ToggleGroupItem } from "@/components/ui/radix";
-import { pct } from "@/lib/format";
+import { pct, recordingLabel } from "@/lib/format";
 import { useExplain, useModels, useSample, useSamples } from "@/lib/queries";
 
 function ModelSelect({ models, value, onChange }: { models: ModelInfo[]; value: string; onChange: (v: string) => void }) {
@@ -37,7 +37,8 @@ function Saliency({ e, sampleId, target, modelName, actions }: { e: ExplainRespo
   const sample = useSample(sampleId);
   const segs = e.segments ?? [];
   if (sample.isPending) return <ChartSkeleton height={300} />;
-  if (sample.isError) return <ErrorCallout title={`Couldn't load sample ${sampleId}`} error={sample.error} onRetry={() => sample.refetch()} />;
+  if (sample.isError) return <ErrorCallout title={"Couldn't load this recording"} error={sample.error} onRetry={() => sample.refetch()} />;
+  const who = recordingLabel(sample.data.recording_id);
   const total = segs.reduce((a, s) => a + s[target], 0) || 1;
   const top = [...segs].sort((a, b) => b[target] - a[target]).slice(0, 2);
   const shares = segs.map((s) => s[target] / total);
@@ -45,19 +46,19 @@ function Saliency({ e, sampleId, target, modelName, actions }: { e: ExplainRespo
   const which = target === "sbp" ? "systolic" : "diastolic";
   const span = (s: SegmentImportance) => `${s.start_s.toFixed(1)}–${s.end_s.toFixed(1)} s`;
   const title = even
-    ? `For sample ${sampleId}, the ${which} estimate depends evenly on every part of the pulse.`
-    : `For sample ${sampleId}, the ${which} estimate leaned most on ${top.map(span).join(" and ")}.`;
+    ? `For ${who}, the ${which} estimate depends evenly on every part of the pulse.`
+    : `For ${who}, the ${which} estimate leaned most on ${top.map(span).join(" and ")}.`;
   return (
     <ChartFrame
       title={title}
-      subtitle={`${modelName}: cleaned PPG with each half-second shaded by how strongly small changes there would move the ${which} estimate, relative to the rest of this sample.`}
-      source={`Gradient saliency computed on sample ${sampleId} from the held-out test recordings.`}
+      subtitle={`${modelName}: cleaned PPG with each half-second shaded by how strongly small changes there would move the ${which} estimate, relative to the rest of this recording.`}
+      source={`Gradient saliency computed on ${who} from the held-out test recordings.`}
       notes="Shading shows where the estimate is sensitive, not why. It isn't evidence of a physiological cause."
       actions={actions}
     >
       <WaveformChart
         height={280}
-        label={`Cleaned PPG for sample ${sampleId} with influential time regions shaded`}
+        label={`Cleaned PPG for ${who} with influential time regions shaded`}
         yLabel="Normalized"
         points={toPoints(sample.data.time_s, sample.data.amplitude)}
         segments={segs}

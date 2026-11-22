@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, ScrollRestoration, useLocation } from "react-router";
 import { Menu, Monitor, Moon, Sun } from "lucide-react";
 import { DISCLAIMER } from "@/api";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -30,26 +29,20 @@ const NAV = [
 export function DisclaimerBanner() {
   const health = useHealth();
   return (
-    <div className="border-b border-rule bg-subtle px-4 py-2 text-center text-xs text-ink sm:text-sm" role="note" aria-label="Disclaimer">
+    <div className="border-b border-rule-soft px-4 py-1.5 text-center text-xs text-muted-foreground" role="note" aria-label="Disclaimer">
       {health.data?.disclaimer ?? DISCLAIMER}
     </div>
   );
 }
 
-export function ModeBadge() {
+/** Thin full-width strip above everything while the server runs on placeholder models. */
+export function DemoBanner() {
   const health = useHealth();
   if (health.data?.mode !== "demo") return null;
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button type="button" className="rounded-full">
-          <Badge variant="caution">Demo data</Badge>
-        </button>
-      </TooltipTrigger>
-      <TooltipContent>
-        Placeholder models and synthetic signals. Run the evaluation script to switch to real results.
-      </TooltipContent>
-    </Tooltip>
+    <div className="bg-caution-soft px-4 py-1 text-center text-xs text-caution" role="note" aria-label="Demo mode">
+      Demo data — synthetic signals, not real recordings.
+    </div>
   );
 }
 
@@ -75,12 +68,18 @@ export function ThemeToggle() {
   );
 }
 
+/**
+ * One real beat: onset to next onset in app sample id 3 (a held-out UCI window, cleaned), with its
+ * dicrotic dip and rebound. Traced from src.preprocess.detect_beats, inverted for SVG y.
+ */
+const BEAT_PATH =
+  "M0 16.8L0.9 16.6 1.8 15.8 2.8 14.3 3.7 12.3 4.6 9.8 5.5 7.2 6.4 4.9 7.3 3.1 8.3 2.1 9.2 2.1 10.1 3.1 11 4.8 11.9 7.1 12.9 9.7 13.8 12.2 14.7 14.3 15.6 15.9 16.5 16.7 17.4 16.9 18.4 16.6 19.3 16 20.2 15.2 21.1 14.6 22 14.3 23 14.3 23.9 14.8 24.8 15.6 25.7 16.5 26.6 17.4 27.5 17.9";
+
 function Wordmark() {
   return (
-    <Link to="/" className="flex items-center gap-2 rounded-md text-lg font-bold tracking-[-0.02em]">
-      <svg viewBox="0 0 32 32" className="size-7" aria-hidden>
-        <rect width="32" height="32" rx="8" className="fill-led" />
-        <path d="M4 18h6l2.5-7 4 13 3-9 1.5 3H28" fill="none" className="stroke-led-ink" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+    <Link to="/" className="flex items-baseline gap-2 rounded-[3px] font-display text-[1.375rem] leading-none font-semibold tracking-[-0.01em]">
+      <svg viewBox="-1 0 30 20" className="h-[0.9em] w-auto translate-y-[0.08em] overflow-visible" aria-hidden>
+        <path d={BEAT_PATH} fill="none" className="stroke-led" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
       CufflessAI
     </Link>
@@ -90,7 +89,7 @@ function Wordmark() {
 const navClass = ({ isActive }: { isActive: boolean }) =>
   cn(
     "rounded-md px-1 py-1 text-sm transition-colors",
-    isActive ? "font-semibold text-ink underline decoration-led decoration-2 underline-offset-[22px]" : "text-muted-foreground hover:text-ink",
+    isActive ? "font-medium text-ink underline decoration-led decoration-2 underline-offset-[19px]" : "text-muted-foreground hover:text-ink",
   );
 
 function ServerProblem() {
@@ -116,12 +115,12 @@ export function AppShell() {
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-surface focus:px-4 focus:py-2">
         Skip to content
       </a>
+      <DemoBanner />
       <DisclaimerBanner />
       <ServerProblem />
-      <header className="sticky top-0 z-40 border-b border-rule bg-paper">
-        <div className="mx-auto flex h-16 max-w-[1120px] items-center gap-4 px-6">
+      <header className="sticky top-0 z-40 border-b border-rule-soft bg-paper">
+        <div className="mx-auto flex h-14 max-w-[1280px] items-center gap-4 px-6">
           <Wordmark />
-          <ModeBadge />
           <nav aria-label="Main" className="ml-auto hidden items-center gap-6 md:flex">
             {NAV.map((n) => (
               <NavLink key={n.to} to={n.to} className={navClass}>
@@ -160,12 +159,12 @@ export function AppShell() {
         </div>
       </header>
 
-      <main id="main" className="mx-auto w-full max-w-[1120px] flex-1 px-6 pt-14 pb-28 sm:pt-20">
+      <main id="main" className="mx-auto w-full max-w-[1280px] flex-1 px-6 pt-8 pb-24 sm:pt-10">
         <Outlet />
       </main>
 
-      <footer className="border-t border-rule">
-        <div className="mx-auto flex max-w-[1120px] flex-col gap-2 px-6 py-8 text-xs text-muted-foreground sm:flex-row sm:justify-between">
+      <footer className="border-t border-rule-soft">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-2 px-6 py-8 text-xs text-muted-foreground sm:flex-row sm:justify-between">
           <p>A Break Through Tech AI Studio project, hosted by Microsoft.</p>
           <p>Nothing you upload is stored.</p>
         </div>

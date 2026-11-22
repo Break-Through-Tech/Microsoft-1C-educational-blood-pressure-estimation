@@ -25,14 +25,14 @@ from fastapi.staticfiles import StaticFiles
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from backend.schemas import (Band, ExplainRequest, ExplainResponse, FeatureImportance,  # noqa: E402
+from backend.schemas import (Band, BeatLandmarks, Beats, ExplainRequest, ExplainResponse, FeatureImportance,  # noqa: E402
                              HealthResponse, InputSummary, MetricRow, MetricsResponse, ModelBands,
                              ModelInfo, ModelsResponse, Prediction, PredictRequest, PredictResponse,
                              SampleDetail, SamplesResponse, SampleSummary, SegmentImportance,
                              SignalQuality, SplitMetrics, TargetBand, TargetMetrics)
 from src.paths import Paths                                                          # noqa: E402
 from src.preprocess import (TARGET_FS, WINDOW_SECONDS, WINDOW_SIZE, clean_window,    # noqa: E402
-                            extract_features, good_ppg_window)
+                            detect_beats, extract_features, good_ppg_window)
 from src.registry import Runtime, get_runtime, prepare_inputs                        # noqa: E402
 
 TORCH_DEVICE = "cpu"
@@ -92,10 +92,25 @@ def _quality(window: np.ndarray) -> SignalQuality:
     return SignalQuality(ok=ok, heart_rate_bpm=None if np.isnan(hr) else round(hr, 1), warnings=warnings)
 
 
+def _beats(window: np.ndarray) -> Beats:
+    b = detect_beats(window)
+    sec = lambda i: round(i / TARGET_FS, 4)  # noqa: E731
+    rep = b["representative"]
+    return Beats(peaks_s=[sec(i) for i in b["peaks"]], onsets_s=[sec(i) for i in b["onsets"]],
+                 representative=None if rep is None else BeatLandmarks(
+                     onset_s=sec(rep["onset"]), peak_s=sec(rep["peak"]), notch_s=sec(rep["notch"])))
+
+
 def _sample_index(rt: Runtime, sample_id: int) -> int:
     if not 0 <= sample_id < len(rt.samples["X"]):
         raise HTTPException(404, f"sample {sample_id} not found (0-{len(rt.samples['X']) - 1})")
     return sample_id
+
+
+def _recording_id(rt: Runtime, i: int) -> int:
+    # stored as "subject_ids" in the data cache and test_samples.npz (kept for compatibility with
+    # built caches and results bundles); the values are UCI recording ids, not patients
+    return int(rt.samples["subject_ids"][i])
 
 
 def _source(rt: Runtime) -> str:
@@ -175,7 +190,7 @@ def create_app(paths: Paths | None = None, frontend_dist: Path | None = None) ->
         r = rt(request)
         s = r.samples
         return SamplesResponse(mode=r.mode, source=_source(r), samples=[
-            SampleSummary(id=i, subject_id=int(s["subject_ids"][i]), true_sbp=float(s["y"][i, 0]),
+            SampleSummary(id=i, recording_id=_recording_id(r, i), true_sbp=float(s["y"][i, 0]),
                           true_dbp=float(s["y"][i, 1])) for i in range(len(s["X"]))])
 
     @app.get("/api/samples/{sample_id}", response_model=SampleDetail)
@@ -184,12 +199,12 @@ def create_app(paths: Paths | None = None, frontend_dist: Path | None = None) ->
         i = _sample_index(r, sample_id)
         s = r.samples
         raw = s.get("raw_ppg")
-        return SampleDetail(mode=r.mode, id=i, subject_id=int(s["subject_ids"][i]),
+        return SampleDetail(mode=r.mode, id=i, recording_id=_recording_id(r, i),
                             true_sbp=float(s["y"][i, 0]), true_dbp=float(s["y"][i, 1]), fs=TARGET_FS,
                             time_s=(np.arange(WINDOW_SIZE) / TARGET_FS).round(4).tolist(),
                             amplitude=np.asarray(s["X"][i]).ravel().round(5).tolist(),
                             raw_amplitude=None if raw is None else np.asarray(raw[i]).round(4).tolist(),
-                            source=_source(r))
+                            beats=_beats(np.asarray(s["X"][i])), source=_source(r))
 
     @app.post("/api/predict", response_model=PredictResponse)
     def predict(body: PredictRequest, request: Request):

@@ -48,20 +48,15 @@ export function TabsContent({ className, ...props }: React.ComponentProps<typeof
   return <TabsPrimitive.Content className={cn("pt-6", className)} {...props} />;
 }
 
-// ToggleGroup (segmented control) -------------------------------------------
+// ToggleGroup: plain text options; the chosen one is ink with an underline, the rest muted ---------
 export function ToggleGroup({ className, ...props }: React.ComponentProps<typeof ToggleGroupPrimitive.Root>) {
-  return (
-    <ToggleGroupPrimitive.Root
-      className={cn("inline-flex rounded-md border border-rule bg-surface p-0.5", className)}
-      {...props}
-    />
-  );
+  return <ToggleGroupPrimitive.Root className={cn("inline-flex items-center gap-4", className)} {...props} />;
 }
 export function ToggleGroupItem({ className, ...props }: React.ComponentProps<typeof ToggleGroupPrimitive.Item>) {
   return (
     <ToggleGroupPrimitive.Item
       className={cn(
-        "h-8 rounded-[5px] px-4 text-sm text-muted-foreground transition-colors hover:text-ink data-[state=on]:bg-subtle data-[state=on]:font-medium data-[state=on]:text-ink",
+        "rounded-[2px] py-0.5 text-sm text-muted-foreground underline-offset-[6px] transition-colors hover:text-ink data-[state=on]:font-medium data-[state=on]:text-ink data-[state=on]:underline data-[state=on]:decoration-ink data-[state=on]:decoration-1",
         className,
       )}
       {...props}
@@ -77,7 +72,7 @@ export function SelectTrigger({ className, children, ...props }: React.Component
   return (
     <SelectPrimitive.Trigger
       className={cn(
-        "flex h-10 w-full items-center justify-between gap-2 rounded-md border border-rule bg-surface px-4 text-left text-sm text-ink disabled:opacity-50 data-[placeholder]:text-muted-foreground [&>span]:truncate",
+        "flex h-10 w-full items-center justify-between gap-2 rounded-md border border-rule-soft bg-surface px-4 text-left text-sm text-ink disabled:opacity-50 data-[placeholder]:text-muted-foreground [&>span]:truncate",
         className,
       )}
       {...props}
@@ -96,7 +91,7 @@ export function SelectContent({ className, children, position = "popper", ...pro
       <SelectPrimitive.Content
         position={position}
         className={cn(
-          "relative z-50 max-h-[min(var(--radix-select-content-available-height),22rem)] min-w-[var(--radix-select-trigger-width)] overflow-y-auto rounded-md border border-rule bg-surface text-ink",
+          "relative z-50 max-h-[min(var(--radix-select-content-available-height),22rem)] min-w-[var(--radix-select-trigger-width)] overflow-y-auto rounded-md border border-rule-soft bg-surface text-ink",
           position === "popper" && "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
           className,
         )}

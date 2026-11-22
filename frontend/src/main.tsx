@@ -25,7 +25,7 @@ function PageLoading() {
   return (
     <div className="min-h-dvh">
       <DisclaimerBanner />
-      <div className="mx-auto max-w-[1120px] px-6 pt-28">
+      <div className="mx-auto max-w-[1280px] px-6 pt-28">
         <LinesSkeleton lines={4} />
       </div>
     </div>

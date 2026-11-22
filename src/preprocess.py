@@ -286,6 +286,52 @@ def extract_features(window: np.ndarray, fs: int = TARGET_FS) -> dict:
     }
 
 
+def _notch_index(d: np.ndarray, peak: int, next_onset: int, fs: int) -> int | None:
+    """Dicrotic notch between a systolic peak and the next onset, from the first derivative `d`.
+
+    The first local minimum of the pulse after the peak; when the band-pass has smoothed the notch
+    into an inflection (no true minimum), the point after the steepest descent where the fall slows
+    most (a local maximum of the slope while it is still negative).
+    """
+    lo, hi = peak + int(0.08 * fs), next_onset - int(0.04 * fs)
+    if hi - lo < 3:
+        return None
+    for i in range(lo + 1, hi):
+        if d[i - 1] < 0 <= d[i]:
+            return i
+    steepest = lo + int(np.argmin(d[lo:hi]))
+    for i in range(steepest + 1, hi - 1):
+        if d[i - 1] < d[i] >= d[i + 1] and d[i] < 0:
+            return i
+    return None
+
+
+def detect_beats(window: np.ndarray, fs: int = TARGET_FS) -> dict:
+    """Beat landmarks in a cleaned window, for display. Same peak detector as `extract_features`.
+
+    Returns sample indices: `peaks` (systolic peaks), `onsets` (the foot before each peak, the minimum
+    since the previous peak) and `representative` = {onset, peak, notch}: the beat nearest the middle
+    of the window whose notch could be located, or None.
+    """
+    w = np.asarray(window, dtype=float).ravel()
+    peaks, _ = find_peaks(w, distance=int(0.33 * fs), prominence=0.2)
+    if len(peaks) == 0:
+        return {"peaks": [], "onsets": [], "representative": None}
+    ibi = int(np.median(np.diff(peaks))) if len(peaks) > 1 else fs
+    onsets = []
+    for k, p in enumerate(peaks):
+        start = peaks[k - 1] if k > 0 else max(0, p - ibi)
+        onsets.append(start + int(np.argmin(w[start:p + 1])) if p > start else int(p))
+    d = np.gradient(w)
+    rep, mid = None, len(w) / 2
+    for k in sorted(range(len(peaks) - 1), key=lambda k: abs(peaks[k] - mid)):
+        notch = _notch_index(d, int(peaks[k]), onsets[k + 1], fs)
+        if notch is not None and onsets[k] < peaks[k]:
+            rep = {"onset": int(onsets[k]), "peak": int(peaks[k]), "notch": int(notch)}
+            break
+    return {"peaks": [int(p) for p in peaks], "onsets": [int(o) for o in onsets], "representative": rep}
+
+
 def features_matrix(X: np.ndarray) -> np.ndarray:
     """(n, 1, 625) windows -> (n, len(FEATURE_NAMES)) float array, columns in FEATURE_NAMES order."""
     return np.array([[extract_features(x)[k] for k in FEATURE_NAMES] for x in X], dtype=float)

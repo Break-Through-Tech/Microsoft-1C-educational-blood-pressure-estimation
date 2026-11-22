@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@fontsource-variable/public-sans";
+@import "@fontsource-variable/source-serif-4/opsz.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -17,6 +18,7 @@
   --ink: #1c1f1e;
   --muted: #5c6460;
   --rule: #d8dbd7;
+  --rule-soft: #e6e8e4;
   --led: #0b7a53;
   --led-ink: #ffffff;
   --led-soft: rgb(11 122 83 / 0.14);
@@ -56,6 +58,7 @@
   --ink: #e9ece9;
   --muted: #a0a8a4;
   --rule: #2f3532;
+  --rule-soft: #262b29;
   --led: #4fc291;
   --led-ink: #0b1f16;
   --led-soft: rgb(79 194 145 / 0.16);
@@ -72,12 +75,16 @@
 @theme inline {
   /* one family: Public Sans, a Libre Franklin derivative and the U.S. Web Design System default (CDC, HHS) */
   --font-sans: "Public Sans Variable", "Franklin Gothic Medium", "Helvetica Neue", Arial, sans-serif;
-  --font-display: var(--font-sans);
+  /* page titles and the wordmark: Source Serif 4 (optical sizes), the voice of a journal figure title.
+     Alternative considered: Newsreader. Swap the family here to try it. */
+  --font-serif: "Source Serif 4 Variable", "Source Serif Pro", Georgia, serif;
+  --font-display: var(--font-serif);
 
   --color-paper: var(--paper);
   --color-surface: var(--surface);
   --color-ink: var(--ink);
   --color-rule: var(--rule);
+  --color-rule-soft: var(--rule-soft);
   --color-led: var(--led);
   --color-led-ink: var(--led-ink);
   --color-led-soft: var(--led-soft);
@@ -148,12 +155,14 @@
   body {
     @apply bg-paper text-ink font-sans text-base antialiased;
   }
-  h1,
-  h2 {
+  h1 {
     @apply font-display text-balance;
   }
+  h2 {
+    @apply text-balance;
+  }
   h1 {
-    @apply font-bold tracking-[-0.025em];
+    @apply font-semibold tracking-[-0.01em];
   }
   h2 {
     @apply font-semibold tracking-[-0.015em];
@@ -188,7 +197,7 @@
 /* a chart or figure: 1px border on white, no shadow */
 @utility frame {
   background: var(--surface);
-  border: 1px solid var(--rule);
+  border: 1px solid var(--rule-soft);
   border-radius: 6px;
 }
 

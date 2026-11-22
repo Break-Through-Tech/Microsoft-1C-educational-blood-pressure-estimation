@@ -1,110 +1,113 @@
-import { useState } from "react";
-import { Link } from "react-router";
-import { Activity } from "lucide-react";
+import { useEffect, useState } from "react";
 import { OtherModels } from "@/components/OtherModels";
-import { ResultPanel, ResultSkeleton } from "@/components/ResultPanel";
-import { SamplePicker, useSampleParam } from "@/components/SamplePicker";
-import { ChartFrame, ChartSkeleton, EmptyState, ErrorCallout, PageHeader } from "@/components/States";
-import { WaveformChart, toPoints } from "@/components/WaveformChart";
-import { Button } from "@/components/ui/button";
+import { PulseStrip } from "@/components/PulseStrip";
+import { InfoTip, ResultPanel, ResultSkeleton } from "@/components/ResultPanel";
+import { SampleStrip, ShuffleLink, useSampleNames, useSampleParam, useSampleSet } from "@/components/SamplePicker";
+import { ChartSkeleton, ErrorCallout, PageHeader } from "@/components/States";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/radix";
-import { mmHg } from "@/lib/format";
-import { useModels, usePredict, useSample, useSamples } from "@/lib/queries";
+import { usePredict, useSample, useSamples } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
-export function SampleWaveform({ id }: { id: number | null }) {
+function SampleWaveform({ id, name }: { id: number | null; name?: string }) {
   const sample = useSample(id);
   const [view, setView] = useState<"cleaned" | "raw">("cleaned");
 
-  if (id === null || sample.isPending) return <ChartSkeleton height={300} />;
-  if (sample.isError) return <ErrorCallout title={`Couldn't load sample ${id}`} error={sample.error} onRetry={() => sample.refetch()} />;
+  if (id === null || sample.isPending) return <ChartSkeleton height={340} />;
+  if (sample.isError)
+    return <ErrorCallout title={`Couldn't load ${name ?? "this recording"}`} error={sample.error} onRetry={() => sample.refetch()} />;
   const d = sample.data;
-  const showRaw = view === "raw" && d.raw_amplitude;
+  const showRaw = view === "raw" && d.raw_amplitude != null;
+  const nBeats = d.beats?.peaks_s.length ?? 0;
+
   return (
-    <ChartFrame
-      className={cn(sample.isPlaceholderData && "opacity-60 transition-opacity")}
-      title={`Sample ${d.id}: five seconds of pulse, measured at ${mmHg(d.true_sbp)} / ${mmHg(d.true_dbp)} mmHg.`}
-      subtitle={
-        showRaw
-          ? `Raw PPG as recorded, ${d.time_s.length} points at ${d.fs} Hz.`
-          : `Cleaned PPG (filtered and scaled to −1 to 1), exactly what the model receives: ${d.time_s.length} points at ${d.fs} Hz.`
-      }
-      source={`${d.source}. The measured pressure comes from an arterial line in the same window.`}
-      actions={
-        d.raw_amplitude && (
+    <figure className={cn("min-w-0", sample.isPlaceholderData && "opacity-60 transition-opacity")}>
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+        <figcaption className="flex items-center gap-1.5">
+          <span className="text-base font-semibold">Pulse</span>
+          {name && <span className="text-sm text-muted-foreground">{name}</span>}
+          <InfoTip label="About this signal">
+            {showRaw ? (
+              <>
+                Raw PPG as recorded: {d.time_s.length} points at {d.fs} Hz, before filtering.
+              </>
+            ) : (
+              <>
+                Cleaned PPG, exactly what the model receives: {d.time_s.length} points at {d.fs} Hz, band-pass filtered
+                (0.5–5 Hz) and scaled to −1 to 1. Beats come from the pipeline's peak detector.
+              </>
+            )}{" "}
+            Measured pressure comes from an arterial line in the same window. Source: {d.source}.
+          </InfoTip>
+        </figcaption>
+        {d.raw_amplitude && (
           <ToggleGroup type="single" value={view} onValueChange={(v) => v && setView(v as "cleaned" | "raw")} aria-label="Signal view">
             <ToggleGroupItem value="cleaned">Cleaned</ToggleGroupItem>
             <ToggleGroupItem value="raw">Raw</ToggleGroupItem>
           </ToggleGroup>
-        )
-      }
-    >
-      <WaveformChart
-        label={`PPG waveform for sample ${d.id}, 5 seconds`}
-        yLabel={showRaw ? "Raw PPG" : "Normalized"}
-        points={toPoints(d.time_s, showRaw ? d.raw_amplitude! : d.amplitude)}
+        )}
+      </div>
+      <PulseStrip
+        time={d.time_s}
+        values={showRaw ? d.raw_amplitude! : d.amplitude}
+        fs={d.fs}
+        beats={d.beats}
+        landmarks={!showRaw}
+        drawKey={d.id}
+        height={340}
+        label={`PPG pulse for ${name ?? "the selected recording"}, 5 seconds, ${nBeats} beats detected`}
       />
-    </ChartFrame>
+      {nBeats > 0 && (
+        <p className="mt-1 text-xs text-muted-foreground">
+          <span className="num">{nBeats}</span> beats detected (circles).
+          {!showRaw && d.beats?.representative && " The shaded beat is labelled."}
+        </p>
+      )}
+    </figure>
   );
 }
 
 export default function PredictPage() {
   const samples = useSamples();
-  const models = useModels();
   const [id, setId] = useSampleParam(samples.data?.samples);
+  const names = useSampleNames(samples.data?.samples);
+  const [shown, shuffle] = useSampleSet(id);
   const predict = usePredict();
+  const { mutate, reset } = predict;
   const current = predict.variables && "sample_id" in predict.variables ? predict.variables.sample_id : undefined;
   const resultIsForThis = current === id;
   const hasSamples = samples.isSuccess && samples.data.samples.length > 0;
 
-  const choose = (next: number) => {
-    setId(next);
-    predict.reset();
-  };
+  // picking a recording estimates it straight away, so the result sits beside its pulse
+  useEffect(() => {
+    if (id === null) return;
+    reset();
+    mutate({ sample_id: id });
+  }, [id, mutate, reset]);
+
+  const name = id !== null ? names.get(id) : undefined;
 
   return (
     <>
-      <PageHeader title="Estimate from a sample">
-        Each sample is five seconds of pulse from a recording the models never saw in training, with the pressure measured
-        at the same time.
+      <PageHeader title="Predict" aside={hasSamples && <ShuffleLink onClick={shuffle} />}>
+        Pick a recording to estimate its blood pressure from five seconds of pulse.
       </PageHeader>
 
-      <div className="flex flex-col gap-8">
-        <SamplePicker value={id} onChange={choose} />
-        {hasSamples && <SampleWaveform id={id} />}
-        {hasSamples && (
-          <div>
-            <Button size="lg" disabled={id === null || predict.isPending} onClick={() => id !== null && predict.mutate({ sample_id: id })}>
-              <Activity /> {predict.isPending ? "Estimating…" : "Estimate blood pressure"}
-            </Button>
-          </div>
-        )}
-      </div>
+      <SampleStrip shown={shown} value={id} onChange={setId} />
 
-      <div className="mt-12" aria-live="polite">
-        {predict.isPending && <ResultSkeleton />}
-        {predict.isError && resultIsForThis && (
-          <ErrorCallout title="Couldn't estimate blood pressure" error={predict.error} onRetry={() => id !== null && predict.mutate({ sample_id: id })} />
-        )}
-        {predict.isSuccess && resultIsForThis && (
-          <>
-            <ResultPanel result={predict.data} selectionRule={models.data?.selection_rule} source={samples.data?.source} />
-            <OtherModels result={predict.data} />
-            <p className="mt-8 text-sm text-muted-foreground">
-              Which parts of the pulse did the model rely on?{" "}
-              <Link to={`/explain?sample=${id}`} className="font-semibold text-ink underline decoration-rule underline-offset-4 hover:decoration-ink">
-                See the explanation for sample {id}
-              </Link>
-            </p>
-          </>
-        )}
-        {predict.isIdle && hasSamples && (
-          <EmptyState title="No estimate yet">
-            Select Estimate blood pressure to see the primary model's reading, its likely range, and how it compares with
-            the measured value.
-          </EmptyState>
-        )}
-      </div>
+      {hasSamples && (
+        <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_330px] lg:gap-12">
+          <SampleWaveform id={id} name={name} />
+          <div className="lg:border-l lg:border-rule-soft lg:pl-10" aria-live="polite">
+            {(predict.isPending || predict.isIdle) && <ResultSkeleton />}
+            {predict.isError && resultIsForThis && (
+              <ErrorCallout title="Couldn't estimate blood pressure" error={predict.error} onRetry={() => id !== null && mutate({ sample_id: id })} />
+            )}
+            {predict.isSuccess && resultIsForThis && <ResultPanel result={predict.data} source={samples.data?.source} />}
+          </div>
+        </div>
+      )}
+
+      {predict.isSuccess && resultIsForThis && <OtherModels result={predict.data} />}
     </>
   );
 }

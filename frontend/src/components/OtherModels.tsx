@@ -1,96 +1,68 @@
 import type { Prediction, PredictResponse } from "@/api";
-import { BpRuler } from "@/components/BpRuler";
-import { ChartFrame, Legend, type LegendKind } from "@/components/States";
-import { mmHg } from "@/lib/format";
-import { seriesColor, useChartColors } from "@/lib/tokens";
+import { mmHg, signed } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-function offBy(p: Prediction, r: PredictResponse) {
-  return Math.abs(p.sbp - r.true_sbp!) + Math.abs(p.dbp - r.true_dbp!);
-}
-
-/** Every model's estimate for the same input, on the same scales, in the fixed chart mapping. */
+/** Every model's estimate for the same input as one plain table: numbers only, primary first. */
 export function OtherModels({ result }: { result: PredictResponse }) {
-  const c = useChartColors();
   const rows = result.all_models; // primary first, baselines last (backend order)
-  const others = rows.filter((m) => m.model !== result.primary.model);
-  const trainedOthers = others.filter((m) => !m.is_baseline);
   const hasRef = result.true_sbp != null && result.true_dbp != null;
-  if (others.length === 0) return null;
+  if (rows.length < 2) return null;
+  const trainedOthers = rows.filter((m) => m.model !== result.primary.model && !m.is_baseline);
+  const off = (m: Prediction) => Math.abs(m.sbp - result.true_sbp!) + Math.abs(m.dbp - result.true_dbp!);
+  const closest = hasRef ? rows.reduce((a, b) => (off(b) < off(a) ? b : a)).model : null;
 
-  let otherIdx = 0;
-  const styled = rows.map((m) => {
-    const role = { is_primary: m.model === result.primary.model, is_baseline: m.is_baseline };
-    const idx = role.is_primary || role.is_baseline ? 0 : otherIdx++;
-    const variant = role.is_primary ? ("primary" as const) : role.is_baseline ? ("baseline" as const) : ("other" as const);
-    return { m, variant, color: seriesColor(c, role, idx) };
-  });
-
-  const best = hasRef ? [...rows].sort((a, b) => offBy(a, result) - offBy(b, result))[0] : null;
-  const title = best
-    ? `${best.display_name} came closest to the measured value on this sample.`
-    : "How every model reads the same signal.";
-
+  const th = "pb-2 text-xs font-normal text-muted-foreground";
   return (
-    <section className="mt-12">
-      <ChartFrame
-        title={title}
-        subtitle="Each model's estimate and 90% range for the same 5-second window, on the same scales."
-        notes={
-          trainedOthers.length === 0
-            ? `${result.primary.display_name} is the only trained model in the app so far. Teammates' models will appear here once they are retrained on the same split. The baseline predicts the training average for every recording, so it shows how much the model adds.`
-            : "One sample says little on its own; the Compare page shows errors across thousands of recordings."
-        }
-      >
-        <div className="overflow-x-auto px-2">
-          <table className="w-full min-w-[520px] text-sm">
-            <thead>
-              <tr className="text-left text-xs text-muted-foreground">
-                <th className="w-[30%] pb-2 font-normal">Model</th>
-                <th className="pb-2 font-normal">Systolic</th>
-                <th className="pb-2 pl-6 font-normal">Diastolic</th>
-              </tr>
-            </thead>
-            <tbody>
-              {styled.map(({ m, variant, color }) => (
-                <tr key={m.model} className="border-t border-rule">
-                  <td className={cn("py-4 pr-4", variant === "baseline" ? "text-muted-foreground" : "font-semibold")}>{m.display_name}</td>
-                  {(["sbp", "dbp"] as const).map((t) => (
-                    <td key={t} className={t === "dbp" ? "py-4 pl-6" : "py-4"}>
-                      <div className="flex items-center gap-4">
-                        <span className="num w-9 shrink-0 text-right" style={{ color: variant === "baseline" ? undefined : color }}>
-                          {mmHg(m[t])}
-                        </span>
-                        <BpRuler
-                          size="mini"
-                          target={t}
-                          variant={variant}
-                          color={color}
-                          value={m[t]}
-                          low={m.band?.[`${t}_low`]}
-                          high={m.band?.[`${t}_high`]}
-                          reference={hasRef ? (t === "sbp" ? result.true_sbp : result.true_dbp) : null}
-                        />
-                      </div>
+    <section className="mt-12" aria-labelledby="all-models">
+      <h2 id="all-models" className="mb-3 text-base font-semibold">
+        All models
+      </h2>
+      <div className="overflow-x-auto">
+        <table className="num w-full min-w-[560px] text-sm">
+          <thead>
+            <tr className="text-left">
+              <th className={cn(th, "w-[34%]")}>Model</th>
+              <th className={cn(th, "text-right")}>Estimate</th>
+              {hasRef && <th className={cn(th, "text-right")}>Error</th>}
+              <th className={cn(th, "text-right")}>Error band (90%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((m) => {
+              const primary = m.model === result.primary.model;
+              return (
+                <tr key={m.model} className="border-t border-rule-soft">
+                  <td className="py-2.5 pr-4">
+                    <span className="flex items-center gap-2 whitespace-nowrap">
+                      <span aria-hidden className={cn("h-3.5 w-[3px] rounded-[1px]", primary ? "bg-led" : "bg-transparent")} />
+                      <span className={m.is_baseline ? "text-muted-foreground" : "text-ink"}>{m.display_name}</span>
+                      {primary && <span className="text-xs text-muted-foreground">primary</span>}
+                      {m.is_baseline && <span className="text-xs text-muted-foreground">training average</span>}
+                    </span>
+                  </td>
+                  <td className={cn("py-2.5 text-right", primary ? "font-medium text-led" : m.is_baseline && "text-muted-foreground")}>
+                    {mmHg(m.sbp)} / {mmHg(m.dbp)}
+                  </td>
+                  {hasRef && (
+                    <td className={cn("py-2.5 text-right", m.model === closest ? "font-medium text-ink" : "text-muted-foreground")}>
+                      {signed(m.sbp - result.true_sbp!)} / {signed(m.dbp - result.true_dbp!)}
                     </td>
-                  ))}
+                  )}
+                  <td className="py-2.5 text-right text-muted-foreground">
+                    {m.band ? `±${mmHg(m.band.half_width_sbp)} / ±${mmHg(m.band.half_width_dbp)}` : "–"}
+                  </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <Legend
-          className="mt-4 px-2"
-          items={[
-            ...styled.map(({ m, variant, color }) => ({
-              kind: (variant === "primary" ? "primary-band" : variant === "baseline" ? "baseline" : "other") as LegendKind,
-              label: m.display_name,
-              color,
-            })),
-            ...(hasRef ? [{ kind: "truth-ring" as LegendKind, label: "Measured value" }] : []),
-          ]}
-        />
-      </ChartFrame>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-3 max-w-[72ch] text-xs leading-relaxed text-muted-foreground">
+        All values in mmHg, systolic / diastolic.{hasRef && " The darker error is the model closest on this recording."}{" "}
+        {trainedOthers.length === 0
+          ? `${result.primary.display_name} is the only trained model so far; teammates' models appear here once retrained on the same split.`
+          : "One recording says little on its own; Compare shows errors across all held-out recordings."}
+      </p>
     </section>
   );
 }

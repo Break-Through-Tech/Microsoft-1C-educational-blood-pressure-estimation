@@ -77,7 +77,8 @@ export interface ModelsResponse extends ModeResponse {
 // GET /api/samples, /api/samples/{id}
 export interface SampleSummary {
   id: number;
-  subject_id: number;
+  /** UCI recording id, 0-based. Not a patient id: UCI has none. */
+  recording_id: number;
   true_sbp: number;
   true_dbp: number;
 }
@@ -85,9 +86,21 @@ export interface SamplesResponse extends ModeResponse {
   source: string;
   samples: SampleSummary[];
 }
+/** Detected beats in the cleaned window, in seconds (same peak detector as the pipeline). */
+export interface BeatLandmarks {
+  onset_s: number;
+  peak_s: number;
+  notch_s: number;
+}
+export interface Beats {
+  peaks_s: number[];
+  onsets_s: number[];
+  representative: BeatLandmarks | null;
+}
 export interface SampleDetail extends ModeResponse {
   id: number;
-  subject_id: number;
+  /** UCI recording id, 0-based. Not a patient id: UCI has none. */
+  recording_id: number;
   true_sbp: number;
   true_dbp: number;
   fs: number;
@@ -96,6 +109,7 @@ export interface SampleDetail extends ModeResponse {
   amplitude: number[];
   /** unprocessed PPG of the same window, for display */
   raw_amplitude: number[] | null;
+  beats: Beats | null;
   source: string;
 }
 

@@ -94,7 +94,8 @@ class ModelsResponse(ModeResponse):
 
 class SampleSummary(BaseModel):
     id: int
-    subject_id: int
+    recording_id: int = Field(description="UCI recording id, (part-1)*3000 + record index, 0-based. Not a patient id: "
+                              "UCI has none, so one person may own several recordings")
     true_sbp: float
     true_dbp: float
 
@@ -104,15 +105,30 @@ class SamplesResponse(ModeResponse):
     samples: list[SampleSummary]
 
 
+class BeatLandmarks(BaseModel):
+    onset_s: float
+    peak_s: float
+    notch_s: float
+
+
+class Beats(BaseModel):
+    """Detected beats in the cleaned window (same peak detector as the pipeline), for display only."""
+    peaks_s: list[float]
+    onsets_s: list[float]
+    representative: Optional[BeatLandmarks] = None
+
+
 class SampleDetail(ModeResponse):
     id: int
-    subject_id: int
+    recording_id: int = Field(description="UCI recording id, (part-1)*3000 + record index, 0-based. Not a patient id: "
+                              "UCI has none, so one person may own several recordings")
     true_sbp: float
     true_dbp: float
     fs: float
     time_s: list[float]
     amplitude: list[float] = Field(description="cleaned PPG window, the exact model input (normalized to [-1, 1])")
     raw_amplitude: Optional[list[float]] = Field(None, description="unprocessed PPG of the same window, for display")
+    beats: Optional[Beats] = None
     source: str
 
 

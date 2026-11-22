@@ -74,12 +74,15 @@ export function LinesSkeleton({ lines = 3, className }: { lines?: number; classN
   );
 }
 
-/** Page opener: a serif title and one plain sentence about what the page shows. */
-export function PageHeader({ title, children }: { title: string; children?: ReactNode }) {
+/** Page opener: a small serif title and one short line about what the page does. */
+export function PageHeader({ title, children, aside }: { title: string; children?: ReactNode; aside?: ReactNode }) {
   return (
-    <header className="mb-12">
-      <h1 className="max-w-[20ch] text-2xl sm:text-[3rem] sm:leading-[1.04]">{title}</h1>
-      {children && <div className="mt-4 max-w-[62ch] text-lg leading-relaxed text-muted-foreground">{children}</div>}
+    <header className="mb-5">
+      <h1 className="text-[1.75rem] leading-tight">{title}</h1>
+      <div className="mt-1 flex items-baseline justify-between gap-6">
+        {children && <div className="max-w-[70ch] text-sm text-muted-foreground">{children}</div>}
+        {aside}
+      </div>
     </header>
   );
 }

@@ -38,13 +38,13 @@ def make_demo_samples(n: int = N_DEMO_SAMPLES, seed: int = DEMO_SEED) -> dict:
     """
     rng = np.random.default_rng(seed)
     n_subjects = 10
-    subject_ids = np.repeat(np.arange(n_subjects), int(np.ceil(n / n_subjects)))[:n] + 900_000
+    subject_ids = np.repeat(np.arange(n_subjects), int(np.ceil(n / n_subjects)))[:n]
     subject_hr = rng.uniform(55, 105, n_subjects)
     subject_bp = np.column_stack([rng.uniform(100, 150, n_subjects), rng.uniform(55, 90, n_subjects)])
 
     X, y, raw, hrs = [], [], [], []
     for sid in subject_ids:
-        k = sid - 900_000
+        k = sid
         hr = subject_hr[k] + rng.normal(0, 3)
         sig = _synthetic_ppg(rng, hr, DEMO_SECONDS)
         mid = (len(sig) - WINDOW_SIZE) // 2

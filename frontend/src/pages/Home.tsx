@@ -4,7 +4,7 @@ import { HeroTrace, beatStats } from "@/components/HeroTrace";
 import { PpgDiagram } from "@/components/PulseTrace";
 import { ChartFrame, ChartSkeleton, ErrorCallout, Legend } from "@/components/States";
 import { Button } from "@/components/ui/button";
-import { err1 } from "@/lib/format";
+import { err1, recordingLabel } from "@/lib/format";
 import { useMetrics, useSample, useSamples } from "@/lib/queries";
 
 /** The hero: a real recording from the held-out test set. */
@@ -28,7 +28,7 @@ function RealPulse() {
       titleId="pulse-title"
       title={title}
       subtitle="Light reflected from a fingertip, cleaned and scaled to the range −1 to 1. The trace plays at the speed it was recorded."
-      source={`${sample.data.source}, sample ${sample.data.id}.`}
+      source={`${sample.data.source}, ${recordingLabel(sample.data.recording_id)}.`}
     >
       <div className="px-2">
         <HeroTrace sample={sample.data} />

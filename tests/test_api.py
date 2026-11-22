@@ -68,7 +68,7 @@ def test_samples_list_and_detail(client):
     assert detail["mode"] == client.expected_mode
     assert len(detail["time_s"]) == len(detail["amplitude"]) == 625
     assert detail["fs"] == 125 and max(abs(v) for v in detail["amplitude"]) <= 1.0 + 1e-6
-    assert detail["true_sbp"] == pytest.approx(s["true_sbp"]) and detail["subject_id"] == s["subject_id"]
+    assert detail["true_sbp"] == pytest.approx(s["true_sbp"]) and detail["recording_id"] == s["recording_id"]
     assert client.get(f"/api/samples/{n}").status_code == 404
 
 
