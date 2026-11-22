@@ -23,7 +23,9 @@ ENV PYTHONUNBUFFERED=1 \
     OMP_NUM_THREADS=1 \
     MKL_NUM_THREADS=1 \
     MALLOC_ARENA_MAX=2
-RUN useradd --create-home --uid 1000 app
+# The app dir must be owned by `app` (WORKDIR alone would make it root-owned): at startup the results
+# bundle creates results/ and artifacts/ here, which aren't in git.
+RUN useradd --create-home --uid 1000 app && install -d -o app -g app /home/app/app
 WORKDIR /home/app/app
 
 COPY --chown=app requirements-app.txt ./
