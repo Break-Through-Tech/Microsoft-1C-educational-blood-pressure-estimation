@@ -2,9 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "react-router";
 import { ErrorCallout, LinesSkeleton, PageHeader } from "@/components/States";
 import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/misc";
 import { useHealth, useModels } from "@/lib/queries";
-import { TEAM } from "@/lib/team";
 
 function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
@@ -99,42 +97,6 @@ export default function AboutPage() {
           </Link>{" "}
           but never used to choose.
         </p>
-      </Section>
-
-      <Section id="team-h" title="The team">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="pl-0">Name</TableHead>
-              <TableHead>Contribution</TableHead>
-              <TableHead>Models built</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {TEAM.map((m) => (
-              <TableRow key={m.name}>
-                <TableCell className="pl-0 font-medium whitespace-nowrap">{m.name}</TableCell>
-                <TableCell className="min-w-56 text-muted-foreground">{m.role}</TableCell>
-                <TableCell className="min-w-48">
-                  {m.models ? (
-                    <ul className="flex flex-col gap-1">
-                      {m.models.map((x) => (
-                        <li key={x.name}>
-                          <span className="font-medium">{x.name}</span>
-                          <span className="block text-xs text-muted-foreground">
-                            {x.detail}. {x.inApp ? "In the app." : "Not in the app yet."}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <span className="text-muted-foreground">None</span>
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
         <p className="text-sm text-muted-foreground">
           Models trained on a different split are added only after they're retrained on this app's split, so every
           model is scored on recordings none of them have seen.
